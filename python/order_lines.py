@@ -35,5 +35,4 @@ def orderLineComp ():
     count_df["average"] = round(count_df["counts"]/num_years,0)
     return count_df
 
-
-orderLineComp()
+    
