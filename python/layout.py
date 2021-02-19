@@ -16,27 +16,31 @@ from tkinter.filedialog import askopenfilename
 # Tk().withdraw()
 #filename = askopenfilename()
 
-layout_df = pd.read_excel(
-    r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\final_layout.xlsx')
 
-locations_df = pd.DataFrame(columns=["Row", "Column", "A/B", "Distance"])
+"""
+This will take layout and compile distance for every location
 
-# for index, row in layout_df.iterrows():
-##    print("index: ", index)
-##    print("row: ", row)
-#    if layout_df.iloc[index,row[index]] != np.nan:
-#        locations_df.append([row,index,layout_df.iloc[index,row[index]])
-#
-for i in range(0, len(layout_df)):
-    for j in range(0, len(layout_df.columns)):
-        locations_df = locations_df.append(
-            {'Row': i+1, 'Column': j+1, 'A/B': 'A', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
-        locations_df = locations_df.append(
-            {'Row': i+1, 'Column': j+1, 'A/B': 'B', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
+"""
+def layoutDistance(layoutFilePath):
+    layout_df = pd.read_excel(layoutFilePath)
 
-locations_df = locations_df.dropna()
+    #layout_df = pd.read_excel(
+    #    r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\final_layout.xlsx')
+    
+    locations_df = pd.DataFrame(columns=["Row", "Column", "A/B", "Distance"])
 
-#locations_df['Distance'] = locations_df[locations_df['Distance'] != np.nan]
-#locations_df['Distance'] = locations_df['Distance'].astype('float')
-locations_df = locations_df.sort_values(by=['Distance'], ascending=True)
-locations_df.reset_index(inplace=True, drop=True)
+    for i in range(0, len(layout_df)):
+        for j in range(0, len(layout_df.columns)):
+            locations_df = locations_df.append(
+                {'Row': i+1, 'Column': j+1, 'A/B': 'A', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
+            locations_df = locations_df.append(
+                {'Row': i+1, 'Column': j+1, 'A/B': 'B', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
+    
+    locations_df = locations_df.dropna()
+    
+    #locations_df['Distance'] = locations_df[locations_df['Distance'] != np.nan]
+    #locations_df['Distance'] = locations_df['Distance'].astype('float')
+    locations_df = locations_df.sort_values(by=['Distance'], ascending=True)
+    locations_df.reset_index(inplace=True, drop=True)
+
+    return locations_df

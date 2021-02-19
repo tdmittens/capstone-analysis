@@ -8,14 +8,14 @@ Created on Thu Feb 11 18:20:25 2021
 import pandas as pd
 import glob
 import os
-from tkinter.filedialog import askdirectory
+#from tkinter.filedialog import askdirectory
 
-def orderLineComp ():
-    filename = askdirectory()
+def orderLineComp (orderLinesLocation):
+    #filename = askdirectory()
     
     # ref: https://stackoverflow.com/questions/11295917/how-to-select-a-directory-and-store-the-location-using-tkinter-in-python
     # use your path
-    all_files = glob.glob(os.path.join(filename, "*.xlsx"))     # advisable to use os.path.join as this makes concatenation OS independent
+    all_files = glob.glob(os.path.join(orderLinesLocation, "*.xlsx"))     # advisable to use os.path.join as this makes concatenation OS independent
     
     
     #for f in all_files:
