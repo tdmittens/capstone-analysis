@@ -93,7 +93,7 @@ def distanceAlgo(SKUList):
     #sortedList = [(1, 3), (4, 38), (6,2), (8,2), (10, 4), (12, 4), (13, 23)]
     aisles = [0, 23, 51]  # based off excel sheet
     lastAisle = (sortedList[len(sortedList)-1])[0]
-    emptyPath = [[0 for i in range(lastAisle)]for j in range(3)]
+    #emptyPath = [[0 for i in range(lastAisle)]for j in range(3)]
     
     # current node will be a tuple, that will be replaced in function location
     currentNode = (0, 0)
@@ -113,13 +113,15 @@ def distanceAlgo(SKUList):
         allNodes.append(currentNode)
         # print(currentNode)
     
-    print(allNodes)
-    # just temp print out of pathing
-    for node in allNodes:
-        emptyPath[2-node[1]][node[0]-1] = 1
+    return allNodes
     
-    # https://stackoverflow.com/questions/17870612/printing-a-two-dimensional-array-in-python
-    print('\n'.join([''.join(['{:2}'.format(item) for item in row])
-                     for row in emptyPath]))
+#    print(allNodes)
+#    # just temp print out of pathing
+#    for node in allNodes:
+#        emptyPath[2-node[1]][node[0]-1] = 1
+#    
+#    # https://stackoverflow.com/questions/17870612/printing-a-two-dimensional-array-in-python
+#    print('\n'.join([''.join(['{:2}'.format(item) for item in row])
+#                     for row in emptyPath]))
 
     
