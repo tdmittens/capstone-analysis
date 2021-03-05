@@ -77,6 +77,6 @@ def SKUAssignment(locationDistance, assignment):
     locationDistance['SKU'] = assignment['SAP #']
     return locationDistance
 
-def ABCAssignment(locationDistance, assignment, abcType:string):
-    if abcType is 'across':
+#def ABCAssignment(locationDistance, assignment, abcType:string):
+#    if abcType is 'across':
         
