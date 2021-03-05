@@ -50,9 +50,12 @@ def orderLineDivision (specs, storeOrder, pickList, skuAssignment): #skuAssignme
     
     
     #convert to tuples for distance algorithm
-    completedOrderLines = []
-#    for index in pickList.index:
-#        completedOrderLines[pickList['Order Line']].append((pickList['Row'][index],pickList['Column'][index]))
+    completedOrderLines = [[]]
+    for i in range(1,np.int_(pickList['Order Line'].max())):
+        empty_array = []
+        for index, row in pickList.iterrows():
+            empty_array.append((row['Row'],row['Column']))
+        completedOrderLines.append(empty_array)
         
     return completedOrderLines
     #return pickList
