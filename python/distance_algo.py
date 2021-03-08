@@ -26,6 +26,10 @@ def sortIntoAisles(SKUList):
 
 # this method is just to check if it should enter the current aisle on its tour or keep moving forward in the bottom aisle
 
+#def flipStartPoint(SortedList, LastAisle):
+#    for SKU in SortedList:
+#        SKU[0] = (LastAisle+1)-SKU[0]
+    
 
 def bottomNode(dataTuple, sorted, lastAisle):
     # if at last aisle
@@ -84,16 +88,11 @@ def topNode(dataTuple, sorted, lastAisle):
 
 def distanceAlgo(SKUList):
     SKUComplete = False
-    #locationDataFrame = None
-    SKUList = [(1, 3), (6, 2), (14, 4), (11, 42),  (18, 4), (23, 23),
-               (5, 38), (29, 7)]  # input - locations of skus
-    
-    
     sortedList = sortIntoAisles(SKUList)  # sort SKUS in order
-    #sortedList = [(1, 3), (4, 38), (6,2), (8,2), (10, 4), (12, 4), (13, 23)]
-    aisles = [0, 23, 51]  # based off excel sheet
     lastAisle = (sortedList[len(sortedList)-1])[0]
-    #emptyPath = [[0 for i in range(lastAisle)]for j in range(3)]
+#    sortedList = flipStartPoint(sortedList, lastAisle) #bandaid to flip sku pick locations
+    aisles = [0, 23, 51]  # based off excel sheet
+
     
     # current node will be a tuple, that will be replaced in function location
     currentNode = (0, 0)

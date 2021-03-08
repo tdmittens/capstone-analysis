@@ -10,16 +10,15 @@ This file contains calculations for each of the heuristics used in our model,
 """
 
 import pandas as pd
+import numpy as np
 from sklearn.utils import shuffle
 #from order_lines import orderLineComp
 import math
 
 
-# space allocation import
-
 availSpaces = 1541*2
 ABCfreq = (0.5, 0.8, 1)
-
+            
 # random heuristic
 def randomAssignment(specs):
     #r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\210209 New Required Files for Software\Capstone_SKUs_V2_attempt_5_1_hour.xlsx
@@ -70,6 +69,18 @@ def abcHorAssignment(specs, availSpaces, ABCfreq):
     
     
     return compiled_data_df
+
+# space allocation import
+def spaceAllocationMultiply(SKUList, SpaceAllocation):
+    compiled_data_df = SKUList.merge(SpaceAllocation, left_on='SAP #', right_on='SAP #')
+    returnFrame = pd.DataFrame()
+    for index in compiled_data_df.index:
+        count = np.int_(compiled_data_df['Number of pick pallets (vi)'][index])
+        row = compiled_data_df.xs(index)
+        for i in range(count):
+            returnFrame = returnFrame.append(row)
+    returnFrame.reset_index(inplace=True, drop=True)
+    return returnFrame
 
 #SKU assignment
 

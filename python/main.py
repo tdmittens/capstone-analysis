@@ -6,10 +6,12 @@ import pandas as pd
 
 from layout import layoutDistance
 from order_lines import orderLineComp
-from calculations import randomAssignment, coiAssignment, weightAssignment, abcAcrossAssignment, abcHorAssignment, SKUAssignment
+from calculations import randomAssignment, coiAssignment, weightAssignment, abcAcrossAssignment, abcHorAssignment, SKUAssignment, spaceAllocationMultiply
 from order_division import orderLineDivision
 from distance_algo import sortIntoAisles, bottomNode, middleNode, topNode, distanceAlgo
 from gui import gui_method
+from distance_calc import distanceCalculation
+from space_allocation import spaceAllocation
 
 #run gui  
 
@@ -21,6 +23,9 @@ storeOrder = pd.read_excel(gui_values['storeOrder'])
 pickList = pd.read_excel(gui_values['storeOrder'])
 orderLinesLocation = gui_values['orderLinesLocation']
 
+#space allocation
+spaceAllocation = spaceAllocation(specs)
+
 # additional variables
 availSpaces = 1541*2
 ABCfreq = (0.5, 0.8, 1)
@@ -29,23 +34,54 @@ ABCfreq = (0.5, 0.8, 1)
 locationDistance = layoutDistance(layout)
 
 # compile order lines together
-    #   pickFrequency = orderLineComp(orderLinesLocation)
+#   pickFrequency = orderLineComp(orderLinesLocation)
 pickFrequency = pd.read_excel(r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\order_lines_df.xlsx')
 
-# calculate assignments using all methods & divide store orders
 
-randomOrderLines = orderLineDivision (specs, storeOrder, pickList, SKUAssignment(locationDistance, randomAssignment(specs)))
-coiOrderLines = orderLineDivision (specs, storeOrder, pickList, SKUAssignment(locationDistance, coiAssignment(specs, pickFrequency)))
-weightOrderLines = orderLineDivision (specs, storeOrder, pickList, SKUAssignment(locationDistance, weightAssignment(specs)))
-#abcHorizOrderLines = orderLineDivision (specs, storeOrder, pickList, SKUAssignment(locationDistance, abcHorAssignment(specs))
-#abcVertiOrderLines = orderLineDivision (specs, storeOrder, pickList, SKUAssignment(locationDistance, abcAcrossAssignment(specs))
+# random
+if gui_values['random'] == True:
+    randomSKU = SKUAssignment(locationDistance, randomAssignment(specs)) #sku assignment
+    randomOrderLines = orderLineDivision (specs, storeOrder, pickList, randomSKU) #calculate assignment and divide store orders
+    randomDistance = [] #distance for each towmotor
+    for orderLine in randomOrderLines: #calculate distance for each towmotor
+        randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    pass #export into excel sheet
 
-# calculate distance for each method
+# coi
+if gui_values['coi'] == True:
+    #coiAsgn = coiAssignment(specs, pickFrequency)
+    coiSKU= SKUAssignment(locationDistance, spaceAllocationMultiply(coiAssignment(specs, pickFrequency),spaceAllocation))
+    #coiSKU2= spaceAllocationMultiply(coiAssignment(specs, pickFrequency),spaceAllocation)
+    coiOrderLines = orderLineDivision (specs, storeOrder, pickList, coiSKU)
+    coiDistance = [] 
+    for orderLine in coiOrderLines: 
+        coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    pass #export into excel sheet
+
+# weight
+if gui_values['weight'] == True:
+    weightSKU= SKUAssignment(locationDistance, weightAssignment(specs))
+    weightOrderLines = orderLineDivision (specs, storeOrder, pickList, weightSKU)
+    weightDistance = [] 
+    for orderLine in weightOrderLines: 
+        weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    pass #export into excel sheet
+    
+# abc horizontal
+if gui_values['across'] == True:
+    #abcHorizSKU= SKUAssignment(locationDistance, abcHorAssignment(specs))
+    #abcHorizOrderLines = orderLineDivision (specs, storeOrder, pickList, abcHorizSKU) 
+    abcHDistance = [] 
+    for orderLine in abcHorizOrderLines: 
+        abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    pass #export into excel sheet
 
 
-
-
-# export data into excel sheets
-
-
-
+# abc vertical
+if gui_values['vertical'] == True:
+    #abcVertiSKU= SKUAssignment(locationDistance, abcAcrossAssignment(specs))
+    #abcVertiOrderLines = orderLineDivision (specs, storeOrder, pickList, abcVertiSKU)
+    abcVDistance = [] 
+    for orderLine in abcVertiOrderLines: 
+        abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    pass #export into excel sheet
