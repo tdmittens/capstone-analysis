@@ -49,9 +49,9 @@ if gui_values['random'] == True:
 
 # coi
 if gui_values['coi'] == True:
-    #coiAsgn = coiAssignment(specs, pickFrequency)
-    coiSKU= SKUAssignment(locationDistance, spaceAllocationMultiply(coiAssignment(specs, pickFrequency),spaceAllocation))
-    #coiSKU2= spaceAllocationMultiply(coiAssignment(specs, pickFrequency),spaceAllocation)
+    coiAsgn = coiAssignment(specs, pickFrequency)
+    coiSKU= SKUAssignment(locationDistance, coiAssignment(specs, pickFrequency))
+    coiSKU2= spaceAllocationMultiply(coiAssignment(specs, pickFrequency),spaceAllocation)
     coiOrderLines = orderLineDivision (specs, storeOrder, pickList, coiSKU)
     coiDistance = [] 
     for orderLine in coiOrderLines: 
