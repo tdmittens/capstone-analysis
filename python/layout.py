@@ -30,3 +30,9 @@ def layoutDistance(layout_df):
     locations_df.reset_index(inplace=True, drop=True)
 
     return locations_df
+
+def orderVertical(locationDistance, aisles):
+    df1 = locationDistance[locationDistance['Row']>aisles[1]]
+    df2 = locationDistance[locationDistance['Row']<aisles[1]]
+    returnFrame = df1.append(df2, ignore_index = True)
+    return returnFrame

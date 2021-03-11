@@ -18,10 +18,12 @@ import math
 
 availSpaces = 1541*2
 ABCfreq = (0.5, 0.8, 1)
-            
+
 # random heuristic
+
+
 def randomAssignment(specs):
-    #r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\210209 New Required Files for Software\Capstone_SKUs_V2_attempt_5_1_hour.xlsx
+    # r'D:\OneDrive - Ryerson University\[School]\4X (Capstone)\210209 New Required Files for Software\Capstone_SKUs_V2_attempt_5_1_hour.xlsx
     compiled_data_df = pd.DataFrame()
     specs = shuffle(specs)
     specs.reset_index(inplace=True, drop=True)
@@ -31,12 +33,16 @@ def randomAssignment(specs):
     return compiled_data_df
 
 # COI heuristic
+
+
 def coiAssignment(specs, pickFrequency):
     compiled_data_df = pd.DataFrame()
-    compiled_data_df = specs.merge(pickFrequency, left_on='SAP #', right_on='Article')
-    compiled_data_df['COI'] = compiled_data_df['average'] / compiled_data_df['Number of pick pallets (vi)']
+    compiled_data_df = specs.merge(
+        pickFrequency, left_on='SAP #', right_on='Article')
+    compiled_data_df['COI'] = compiled_data_df['average'] / \
+        compiled_data_df['Number of pick pallets (vi)']
     compiled_data_df = compiled_data_df.sort_values(by=['COI'], ascending=True)
-    compiled_data_df = compiled_data_df[['SAP #','COI']]
+    compiled_data_df = compiled_data_df[['SAP #', 'COI']]
     return compiled_data_df
 
 
@@ -44,35 +50,37 @@ def coiAssignment(specs, pickFrequency):
 def weightAssignment(specs):
     compiled_data_df = pd.DataFrame()
     compiled_data_df['SAP #'] = specs['SAP #']
-    compiled_data_df['Weight'] = specs['Case Weight (kg)'] / specs['Case Volume (cuft)']
-    compiled_data_df = compiled_data_df.sort_values(by=['Weight'], ascending=False)
-    compiled_data_df = compiled_data_df[['SAP #','Weight']]
+    compiled_data_df['Weight'] = specs['Case Weight (kg)'] / \
+        specs['Case Volume (cuft)']
+    compiled_data_df = compiled_data_df.sort_values(
+        by=['Weight'], ascending=False)
+    compiled_data_df = compiled_data_df[['SAP #', 'Weight']]
     return compiled_data_df
 
 # ABC heuristic
-def abcAcrossAssignment(specs, availSpaces, ABCfreq):
+
+
+def abcAcrossAssignment(specs, cutoff):
     compiled_data_df = pd.DataFrame()
     specs = specs.sort_values(by=['Restocks'], ascending=False)
     specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
-    
-    ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
-    
     
     return compiled_data_df
 
-def abcHorAssignment(specs, availSpaces, ABCfreq):
+
+def abcHorAssignment(specs, cutoff):
     compiled_data_df = pd.DataFrame()
     specs = specs.sort_values(by=['Restocks'], ascending=False)
     specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
-    
-    ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
-    
-    
+
     return compiled_data_df
 
 # space allocation import
+
+
 def spaceAllocationMultiply(SKUList, SpaceAllocation):
-    compiled_data_df = SKUList.merge(SpaceAllocation, left_on='SAP #', right_on='SAP #')
+    compiled_data_df = SKUList.merge(
+        SpaceAllocation, left_on='SAP #', right_on='SAP #')
     returnFrame = pd.DataFrame()
     for index in compiled_data_df.index:
         count = np.int_(compiled_data_df['Number of pick pallets (vi)'][index])
@@ -82,12 +90,12 @@ def spaceAllocationMultiply(SKUList, SpaceAllocation):
     returnFrame.reset_index(inplace=True, drop=True)
     return returnFrame
 
-#SKU assignment
+# SKU assignment
+
 
 def SKUAssignment(locationDistance, assignment):
     locationDistance['SKU'] = assignment['SAP #']
     return locationDistance
 
-#def ABCAssignment(locationDistance, assignment, abcType:string):
+# def ABCAssignment(locationDistance, assignment, abcType:string):
 #    if abcType is 'across':
-        
