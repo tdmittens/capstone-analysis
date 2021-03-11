@@ -23,6 +23,9 @@ storeOrder = pd.read_excel(gui_values['storeOrder'])
 pickList = pd.read_excel(gui_values['storeOrder'])
 orderLinesLocation = gui_values['orderLinesLocation']
 
+#sales data needs to be a list of multiple dataframes (one dataframe for each year)
+salesDataDict = pd.read_excel(gui_values['salesData'], None) #this will create dictionary of all sheets
+
 #space allocation
 spaceAllocation = spaceAllocation(specs)
 

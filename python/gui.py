@@ -15,27 +15,32 @@ def gui_method():
             sg.Text("This form requires files listed below to calculate model that returns the lowest distance.")
         ],
         [
-            sg.Text("Select Excel Layout"),
+            sg.Text("Select Excel Layout", size=(30,1)),
             sg.In(size=(25, 1), enable_events=True, key="layout"),
             sg.FileBrowse(),
         ],
         [
-            sg.Text("Select Specifications File"),
+            sg.Text("Select Specifications File", size=(30,1)),
             sg.In(size=(25, 1), enable_events=True, key="specs"),
             sg.FileBrowse(),
         ],
         [
-            sg.Text("Select Store Orders"),
+            sg.Text("Select Sales Data File", size=(30,1)),
+            sg.In(size=(25, 1), enable_events=True, key="salesData"),
+            sg.FileBrowse(),
+        ],
+        [
+            sg.Text("Select Store Orders", size=(30,1)),
             sg.In(size=(25, 1), enable_events=True, key="storeOrder"),
             sg.FileBrowse(),
-        ],  
+        ], 
         [
-            sg.Text("Select Order Lines Location"),
+            sg.Text("Select Order Lines Location", size=(30,1)),
             sg.In(size=(25, 1), enable_events=True, key="orderLinesLocation"),
             sg.FolderBrowse(),
         ],
         [
-            sg.Text("Export File Location"),
+            sg.Text("Export File Location", size=(30,1)),
             sg.In(size=(25, 1), enable_events=True, key="exportLocation"),
             sg.FolderBrowse(),
         ],
