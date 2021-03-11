@@ -8,10 +8,11 @@ from layout import layoutDistance
 from order_lines import orderLineComp
 from calculations import randomAssignment, coiAssignment, weightAssignment, abcAcrossAssignment, abcHorAssignment, SKUAssignment, spaceAllocationMultiply
 from order_division import orderLineDivision
-from distance_algo import sortIntoAisles, bottomNode, middleNode, topNode, distanceAlgo
+from distance_algo import distanceAlgo
 from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import spaceAllocation
+from sales_data import salesDataComp
 
 #run gui  
 
@@ -25,6 +26,7 @@ orderLinesLocation = gui_values['orderLinesLocation']
 
 #sales data needs to be a list of multiple dataframes (one dataframe for each year)
 salesDataDict = pd.read_excel(gui_values['salesData'], None) #this will create dictionary of all sheets
+salesDataFrame = salesDataComp (salesDataDict)
 
 #space allocation
 spaceAllocation = spaceAllocation(specs)
