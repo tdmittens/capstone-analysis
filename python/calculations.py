@@ -60,20 +60,12 @@ def weightAssignment(specs):
 # ABC heuristic
 
 
-def abcAcrossAssignment(specs, cutoff):
+def abcAssignment(specs):
     compiled_data_df = pd.DataFrame()
     specs = specs.sort_values(by=['Restocks'], ascending=False)
     specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
-    
     return compiled_data_df
 
-
-def abcHorAssignment(specs, cutoff):
-    compiled_data_df = pd.DataFrame()
-    specs = specs.sort_values(by=['Restocks'], ascending=False)
-    specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
-
-    return compiled_data_df
 
 # space allocation import
 

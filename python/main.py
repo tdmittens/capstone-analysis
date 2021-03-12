@@ -5,9 +5,9 @@ Before creating web app, this will serve as main file for all calculations
 import pandas as pd
 import math
 
-from layout import layoutDistance
+from layout import layoutDistance, orderByVertical, orderByHorizontal
 from order_lines import orderLineComp
-from calculations import randomAssignment, coiAssignment, weightAssignment, abcAcrossAssignment, abcHorAssignment, SKUAssignment, spaceAllocationMultiply
+from calculations import randomAssignment, coiAssignment, weightAssignment, abcAssignment, SKUAssignment, spaceAllocationMultiply
 from order_division import orderLineDivision
 from distance_algo import distanceAlgo
 from gui import gui_method
@@ -85,8 +85,9 @@ if gui_values['weight'] == True:
 
 # abc horizontal
 if gui_values['across'] == True:
-    #abcHorizSKU= SKUAssignment(locationDistance, abcHorAssignment(specs, ABCcutoff))
-    #abcHorizOrderLines = orderLineDivision (specs, storeOrder, pickList, abcHorizSKU)
+    horizLocation = orderByHorizontal(locationDistance, aisleTuple)
+    abcHorizSKU= SKUAssignment(horizLocation, abcAssignment(specs))
+    abcHorizOrderLines = orderLineDivision (specs, storeOrder, pickList, abcHorizSKU)
     abcHDistance = []
     for orderLine in abcHorizOrderLines:
         abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -95,8 +96,9 @@ if gui_values['across'] == True:
 
 # abc vertical
 if gui_values['vertical'] == True:
-    #abcVertiSKU= SKUAssignment(locationDistance, abcAcrossAssignment(specs, ABCcutoff))
-    #abcVertiOrderLines = orderLineDivision (specs, storeOrder, pickList, abcVertiSKU)
+    vertiLocation = orderByVertical(locationDistance, aisleTuple)
+    abcVertiSKU= SKUAssignment(vertiLocation, abcAssignment(specs))
+    abcVertiOrderLines = orderLineDivision (specs, storeOrder, pickList, abcVertiSKU)
     abcVDistance = []
     for orderLine in abcVertiOrderLines:
         abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
