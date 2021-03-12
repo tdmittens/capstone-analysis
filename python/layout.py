@@ -31,8 +31,25 @@ def layoutDistance(layout_df):
 
     return locations_df
 
-def orderVertical(locationDistance, aisles):
-    df1 = locationDistance[locationDistance['Row']>aisles[1]]
-    df2 = locationDistance[locationDistance['Row']<aisles[1]]
-    returnFrame = df1.append(df2, ignore_index = True)
+def orderByVertical(locationDistance, aisles):
+    locationDistance = locationDistance.sort_values(by = ['Column','Row'], ascending = False)
+    returnFrame = pd.DataFrame()
+    #create loop to append in increments of 10
+    counter = aisles[2]
+    increment = 10
+    while counter > increment:
+        returnFrame = returnFrame.append(locationDistance[locationDistance['Row']>counter])
+        locationDistance = locationDistance.drop(locationDistance[locationDistance['Row']>counter].index, axis = 0)
+        counter -= increment
+    returnFrame = returnFrame.append(locationDistance)
+    returnFrame = returnFrame.reset_index(drop=True)
+        
+#    df1 = locationDistance[locationDistance['Row']>aisles[1]]
+#    df2 = locationDistance[locationDistance['Row']<aisles[1]]
+#    returnFrame = df1.append(df2, ignore_index = True)
+    return returnFrame
+
+def orderByHorizontal(locationDistance, aisles):
+    returnFrame = locationDistance.sort_values(by = ['Column','Row'], ascending = False) #sort by aisle, then by row, starting from bottom and working to the top
+    returnFrame = returnFrame.reset_index(drop = True)
     return returnFrame
