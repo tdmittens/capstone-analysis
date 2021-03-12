@@ -95,7 +95,7 @@ def distanceAlgo(SKUList):
 
     
     # current node will be a tuple, that will be replaced in function location
-    currentNode = ((sortedList[0])[0]-1, 0)
+    currentNode = ((sortedList[0])[0]-2, 0)
     allNodes = []
     
     while (SKUComplete is False):

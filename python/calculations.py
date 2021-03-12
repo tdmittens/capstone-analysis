@@ -61,10 +61,9 @@ def weightAssignment(specs):
 
 
 def abcAssignment(specs):
-    compiled_data_df = pd.DataFrame()
     specs = specs.sort_values(by=['Restocks'], ascending=False)
     specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
-    return compiled_data_df
+    return specs
 
 
 # space allocation import

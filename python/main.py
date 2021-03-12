@@ -50,11 +50,9 @@ pickFrequency = pd.read_excel(
 
 # random
 if gui_values['random'] == True:
-    randomSKU = SKUAssignment(
-        locationDistance, randomAssignment(specs))  # sku assignment
+    randomSKU = SKUAssignment(locationDistance, randomAssignment(specs))  # sku assignment
     # calculate assignment and divide store orders
-    randomOrderLines = orderLineDivision(
-        specs, storeOrder, pickList, randomSKU)
+    randomOrderLines = orderLineDivision(specs, storeOrder, pickList, randomSKU)
     randomDistance = []  # distance for each towmotor
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
         randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -62,11 +60,9 @@ if gui_values['random'] == True:
 
 # coi
 if gui_values['coi'] == True:
-    coiAsgn = coiAssignment(specs, pickFrequency)
-    coiSKU = SKUAssignment(
-        locationDistance, coiAssignment(specs, pickFrequency))
-    coiSKU2 = spaceAllocationMultiply(
-        coiAssignment(specs, pickFrequency), spaceAllocation)
+    #coiAsgn = coiAssignment(specs, pickFrequency)
+    coiSKU = SKUAssignment(locationDistance, coiAssignment(specs, pickFrequency))
+    #coiSKU2 = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocation)
     coiOrderLines = orderLineDivision(specs, storeOrder, pickList, coiSKU)
     coiDistance = []
     for orderLine in coiOrderLines:
@@ -76,8 +72,7 @@ if gui_values['coi'] == True:
 # weight
 if gui_values['weight'] == True:
     weightSKU = SKUAssignment(locationDistance, weightAssignment(specs))
-    weightOrderLines = orderLineDivision(
-        specs, storeOrder, pickList, weightSKU)
+    weightOrderLines = orderLineDivision(specs, storeOrder, pickList, weightSKU)
     weightDistance = []
     for orderLine in weightOrderLines:
         weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
