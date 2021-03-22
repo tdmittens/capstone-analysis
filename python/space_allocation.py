@@ -27,8 +27,54 @@ Created on Fri Feb 12 00:19:30 2021
 #    report = opl.report
 
 import pandas as pd
+import win32com.client
+import os, os.path
 
 def spaceAllocation(specs):
     returnFrame = specs[['SAP #','Number of pick pallets (vi)']]
     return returnFrame
 
+def ExcelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
+    ExcelApp = win32com.client.Dispatch("Excel.Application")
+    ExcelApp.Visible = True
+    
+    #create new workbook
+    ExcelWorksheet = ExcelApp.Workbooks.Open(inputPath)
+    
+    #assign locations based off layout of excel sheet
+    loc1 = ExcelWorksheet.Worksheets("Sheet1").Range("Q2")
+    loc2 = ExcelWorksheet.Worksheets("Sheet1").Range("Q4")
+    loc3 = ExcelWorksheet.Worksheets("Sheet1").Range("Q6")
+    
+    #assign value to locations
+    loc1.value = SpacesPerSKU 
+    loc2.value = TotalSpaces
+    loc3.value = TotalSKUs 
+    
+    
+    #ExcelApp.Application.Run(inputPath + "!Sheet4.setupsolver")
+    #ExcelWorksheet.SaveAs(Filename=exportPath)
+    #try catch for Space allocation macro
+    try:
+        ExcelApp.Application.Run(os.path.basename(inputPath)+"!Module5.setupsolver")
+    except:
+        print("Space Allocation Macro is not working, please confirm OpenSolver is installed on Microsoft Excel, and ensure Opensolver is enabled in VBA References. Check out https://opensolver.org/installing-opensolver/ to download.")
+    
+    #try catch for saving file
+    try:
+        ExcelWorksheet.Save()
+    except:
+        print("File could not be saved. Please try again.")
+    
+    ExcelApp.Application.Quit()
+    
+    #set reference to range of cells
+    
+#run function
+    
+ExcelApp(r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
+         8,
+         2688,
+         1541,
+         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation_2.xlsm")
+    

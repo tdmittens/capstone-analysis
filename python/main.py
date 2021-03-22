@@ -33,6 +33,7 @@ salesDataFrame = salesDataComp(salesDataDict)
 # space allocation
 spaceAllocation = spaceAllocation(specs)
 
+
 # additional variables
 availSpaces = 1541*2
 ABCfreq = (0.5, 0.8, 1)
