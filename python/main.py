@@ -12,8 +12,12 @@ from order_division import orderLineDivision
 from distance_algo import distanceAlgo
 from gui import gui_method
 from distance_calc import distanceCalculation
-from space_allocation import spaceAllocation
+from space_allocation import spaceAllocation, excelApp
 from sales_data import salesDataComp
+
+
+
+#TODO - set default files when empty
 
 # run gui
 
@@ -31,7 +35,13 @@ salesDataDict = pd.read_excel(gui_values['salesData'], None)
 salesDataFrame = salesDataComp(salesDataDict)
 
 # space allocation
-spaceAllocation = spaceAllocation(specs)
+#spaceAllocation = spaceAllocation(specs)
+excelApp(specs,
+         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
+         8,
+         2688,
+         1541,
+         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation_2.xlsm")
 
 
 # additional variables

@@ -34,12 +34,25 @@ def spaceAllocation(specs):
     returnFrame = specs[['SAP #','Number of pick pallets (vi)']]
     return returnFrame
 
-def ExcelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
+def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
     ExcelApp = win32com.client.Dispatch("Excel.Application")
     ExcelApp.Visible = True
     
     #create new workbook
     ExcelWorksheet = ExcelApp.Workbooks.Open(inputPath)
+    ExcelSheet = ExcelWorksheet.WorkSheets("Sheet1")
+    
+    #reconfigure specifications file
+    
+    
+    #set specificiations into excel file
+    #https://stackoverflow.com/questions/22469054/write-a-data-frame-to-worksheet-using-win32com-in-python
+    StartRow = 2
+    StartCol = 1
+    ExcelSheet.Range(ExcelSheet.Cells(StartRow,StartCol),# Cell to start the "paste"
+         ExcelSheet.Cells(StartRow+len(specs.index)-1,
+                  StartCol+len(specs.columns)-1)
+         ).Value = specs.values
     
     #assign locations based off layout of excel sheet
     loc1 = ExcelWorksheet.Worksheets("Sheet1").Range("Q2")
@@ -72,7 +85,8 @@ def ExcelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int,
     
 #run function
     
-ExcelApp(r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
+ExcelApp(specs = pd.read_excel(),
+         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
          8,
          2688,
          1541,
