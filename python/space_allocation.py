@@ -29,28 +29,44 @@ Created on Fri Feb 12 00:19:30 2021
 import pandas as pd
 import win32com.client
 import os, os.path
+import numpy as np
 import time
 
 def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
     ExcelApp = win32com.client.Dispatch("Excel.Application")
     ExcelApp.Visible = True
     
+    #https://stackoverflow.com/questions/4060221/how-to-reliably-open-a-file-in-the-same-directory-as-a-python-script
+    newPath = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(inputPath), os.path.basename(inputPath)))
+    
     #create new workbook
-    ExcelWorksheet = ExcelApp.Workbooks.Open(inputPath)
+    try:
+        ExcelWorksheet = ExcelApp.Workbooks.Open(newPath)
+    except:
+        print("File could not be opened, the application will try to open it again in 10 seconds.")
+        time.sleep(10)
+        try:
+            ExcelWorksheet = ExcelApp.Workbooks.Open(newPath)
+        except:
+            print("File could not be opened on its second try. The program will now close.")
+        
     ExcelSheet = ExcelWorksheet.WorkSheets("Sheet1")
     
     #reconfigure specifications file
+    #https://stackoverflow.com/questions/49853193/win32com-error-internal-error-the-buffer-length-is-not-the-sequence-length-e
     
     specs = specs[['SAP #', 'Ti', 'Hi', '# items/time period']]
+    specsMod = np.ascontiguousarray(specs) 
+    specsMod = specsMod.tolist()
     
     #set specificiations into excel file
     #https://stackoverflow.com/questions/22469054/write-a-data-frame-to-worksheet-using-win32com-in-python
     StartRow = 2
     StartCol = 1
     ExcelSheet.Range(ExcelSheet.Cells(StartRow,StartCol),# Cell to start the "paste"
-         ExcelSheet.Cells(StartRow+len(specs.index)-1,
-                  StartCol+len(specs.columns)-1)
-         ).Value = specs.values
+             ExcelSheet.Cells(StartRow+len(specs.index)-1,
+                      StartCol+len(specs.columns))# No -1 for the index
+             ).Value = specsMod
     
     #assign locations based off layout of excel sheet
     loc1 = ExcelWorksheet.Worksheets("Sheet1").Range("Q2")

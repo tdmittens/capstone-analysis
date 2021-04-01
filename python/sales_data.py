@@ -67,5 +67,7 @@ def specsDataComp (specs, salesDataDict, weekRange):
     returnFrame = returnFrame[['SKU','# items/time period']]
     specs = specs.merge(returnFrame, left_on="SAP #", right_on="SKU", how='left')
     specs.drop(['SKU'], axis=1, inplace=True)
+    specs = specs.replace(np.nan,0)
+    specs = specs[specs['# items/time period']!=0] #to ensure there is at least one item moving in two years
     return specs
 

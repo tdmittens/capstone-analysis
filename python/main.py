@@ -14,7 +14,7 @@ from distance_algo import distanceAlgo
 from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import excelApp
-from sales_data import salesDataComp, specsDataComp
+from sales_data import specsDataComp #,salesDataComp
 #from export import exportFiles
 
 """
