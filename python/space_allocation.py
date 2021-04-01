@@ -29,10 +29,7 @@ Created on Fri Feb 12 00:19:30 2021
 import pandas as pd
 import win32com.client
 import os, os.path
-
-def spaceAllocation(specs):
-    returnFrame = specs[['SAP #','Number of pick pallets (vi)']]
-    return returnFrame
+import time
 
 def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
     ExcelApp = win32com.client.Dispatch("Excel.Application")
@@ -44,6 +41,7 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int,
     
     #reconfigure specifications file
     
+    specs = specs[['SAP #', 'Ti', 'Hi', '# items/time period']]
     
     #set specificiations into excel file
     #https://stackoverflow.com/questions/22469054/write-a-data-frame-to-worksheet-using-win32com-in-python
@@ -79,16 +77,28 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int,
     except:
         print("File could not be saved. Please try again.")
     
+    
+    #this will create async process that will wait for file to quit before continuing
+    #update - async unreliable, add finite time delay for now
+        
     ExcelApp.Application.Quit()
+    print("Waiting for file to close...")
+    time.sleep(10)
+    space_allocation_df = pd.read_excel(inputPath, "Solver Sheet")
+    space_allocation_df.drop(0,inplace=True)
+    space_allocation_df.drop(space_allocation_df.columns[0:7],axis=1,inplace=True)
+    space_allocation_df.drop(space_allocation_df.columns[3:5],axis=1,inplace=True)
+    space_allocation_df.columns = ["SAP #","Zij","Number of pick pallets (vi)"]
+    return space_allocation_df
     
     #set reference to range of cells
     
 #run function
     
-ExcelApp(specs = pd.read_excel(),
-         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
-         8,
-         2688,
-         1541,
-         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation_2.xlsm")
+#ExcelApp(specs = pd.read_excel(),
+#         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation.xlsm",
+#         8,
+#         2688,
+#         1541,
+#         r"D:\OneDrive - Ryerson University\[School]\4X (Capstone)\Programming Models\Final Capstone Model (w git)\capstone-analysis\python\space_allocation_2.xlsm")
     

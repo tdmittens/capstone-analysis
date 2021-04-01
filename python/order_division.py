@@ -11,7 +11,7 @@ import numpy as np
 #format of input ({Location}, {SKU})
 #preferred format ({Row}, {Column}, {a/b}, {SKU})
 
-def orderLineDivision (specs, storeOrder, pickList, skuAssignment): #skuAssignment is dataframe
+def orderLineDivision (specs, pickList, skuAssignment): #skuAssignment is dataframe
 
     #new_df = pd.DataFrame(columns = ["Row", "Column", "A/B", "SKU"])
     weight = specs[['SAP #','Case Volume (cuft)']]

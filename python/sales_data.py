@@ -7,9 +7,11 @@ Created on Thu Mar 11 13:30:04 2021
 
 """
 Method will use sales data dataframe
+Update: Sales Data will only use FY2019 and FY2020 to maintain consistency between data frames
 """
 
 import pandas as pd
+import numpy as np
 
 def salesDataComp (salesDataDict):
     returnFrame = pd.DataFrame(columns=["SKU", "Description", "Total"])
@@ -30,4 +32,40 @@ def salesDataComp (salesDataDict):
     returnFrame['Grand Total'] = returnFrame.iloc[:,2:].sum(axis=1)
     returnFrame = returnFrame[['SKU','Description','Grand Total']]
     return returnFrame
-    
+
+def specsDataComp (specs, salesDataDict, weekRange):
+    #returnFrame = pd.DataFrame(columns=["SKU", "Description", "Items/Time Period", "Total"])
+    returnFrame = pd.DataFrame()
+    for key, df in salesDataDict.items(): #value is the dataframe in this case=
+        if key == list(salesDataDict.keys())[0]: #first sheet should not be merged, https://www.geeksforgeeks.org/python-get-the-first-key-in-dictionary/
+            df.columns = [str(x) for x in range(1,len(df.columns)+1)]
+            df.drop(df.index[[0,1,2,3,4]],inplace=True)
+            df.drop(df[df["5"] == "Result"].index, inplace=True)
+            df = df.replace(np.nan,0)
+            returnFrame["SKU"] = df["5"]
+            returnFrame["Description"] = df["6"]
+            for i in range(weekRange[0]+6,weekRange[1]+6+1):
+                returnFrame["Week " + str(i-6)] = df[str(i+6)].astype('float64')
+        else:
+            df.columns = [str(x) for x in range(1,len(df.columns)+1)]
+            df.drop(df.index[[0,1,2,3,4]],inplace=True)
+            df.drop(df[df["5"] == "Result"].index, inplace=True)
+            df = df.replace(np.nan,0)
+            emptyFrame = pd.DataFrame()
+            emptyFrame["SKU"] = df["5"]
+            #emptyFrame["Description"] = df["6"]
+            for i in range(weekRange[0]+6,weekRange[1]+6+1):
+                emptyFrame["Week " + str(i-6)] = df[str(i+6)].astype('float64')
+            returnFrame = returnFrame.merge(emptyFrame, on='SKU', how='right') #right merge so only 2020 skus are added
+            #returnFrame = pd.merge(left=returnFrame, right=emptyFrame, left_on='SKU', right_on='SKU')
+            #returnFrame = returnFrame.merge(emptyFrame, how='inner', on="SKU") #inner join of df
+    #returnFrame['Grand Total'] = returnFrame.iloc[:,2:].sum(axis=1)
+    #returnFrame = returnFrame[['SKU','Description','Grand Total']]
+    returnFrame['# items/time period'] = returnFrame.sum(axis=1, numeric_only=True)
+    returnFrame['# items/time period'] = returnFrame['# items/time period']/(weekRange[1]-weekRange[0])
+    returnFrame['SKU'] = returnFrame['SKU'].astype('int64')
+    returnFrame = returnFrame[['SKU','# items/time period']]
+    specs = specs.merge(returnFrame, left_on="SAP #", right_on="SKU", how='left')
+    specs.drop(['SKU'], axis=1, inplace=True)
+    return specs
+
