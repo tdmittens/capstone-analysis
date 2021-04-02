@@ -35,7 +35,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
             actualCol = listColumns.index(colNo)
             #if column is even
             if actualCol%2 != 0:
-                for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
+                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]+1):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
@@ -53,7 +53,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
                 counter+=3
             #if column is odd
             else:     
-                for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
+                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]+1):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
@@ -77,22 +77,31 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
     return array
 
 """
+This will create a file to view for each heuristic
+"""
+def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, exportPath:str, heuristicType:str):
+    #https://xlsxwriter.readthedocs.io/example_pandas_multiple.html
+    writer = pd.ExcelWriter(exportPath + "/" + heuristicType + ".xlsx", engine='xlsxwriter')
+    
+    visual_sku_df = pd.DataFrame(visualSKU)
+    order_lines_df = pd.DataFrame(orderLines).T
+    order_distance_df = pd.DataFrame(orderDistance).T
+    
+    assignmentSKU.to_excel(writer, sheet_name='SKU Assignment')
+    visual_sku_df.to_excel(writer, sheet_name='SKU Layout')
+    order_lines_df.to_excel(writer, sheet_name='Order Line Pick Up')
+    order_distance_df.to_excel(writer, sheet_name='Order Line Distances')
+
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()
+
+
 
 """
-def exportFiles():
+This will evaluate 
+"""
+def evaluationFile():
     pass
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

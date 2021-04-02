@@ -74,6 +74,14 @@ else:
     print("Sales data not specified. Default file will be used.")
     salesDataDict = pd.read_excel(r"default\Sales Data.xlsx", None)
 
+#export path
+if gui_values['exportLocation'] != "":
+    exportLocation = gui_values['exportLocation']
+else:
+    print("Export location not specified. ../python/export will be used as path ")
+    exportLocation = r"export"
+
+
 #Tuple for week range
 try:  
     weekRange = ((int)(gui_values['startWeek']), (int)(gui_values['endWeek']))
@@ -137,14 +145,14 @@ This will set the aisle tuple based off inputs given by user
 """
 
 if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
-    print("One of the cross aisles are missing. The default values of 1, 23, 52 will be used.")
-    aisleTuple = (1,23,52)
+    print("One of the cross aisles are missing. The default values of 1, 24, 52 will be used.")
+    aisleTuple = (1,24,52)
 else:
     try:
         aisleTuple = ((int)(gui_values['aisleTop']),(int)(gui_values['aisleMiddle']),(int)(gui_values['aisleBottom']))
     except:
-        print("Inputs for cross aisles are invalid. The The default value of 1, 23, 52 will be used.")
-        aisleTuple = (1,23,52)
+        print("Inputs for cross aisles are invalid. The The default value of 1, 24, 52 will be used.")
+        aisleTuple = (1,24,52)
 
 # additional variables
 availSpaces = totalSpaces
@@ -159,6 +167,8 @@ locationDistance = layoutDistance(layout)
 This block of code will implement SKU allocation models, dependant if the user selected them in the GUI.
 It will also determine the minimum distance taken for each of the models as well.
 For each heuristic, it will also compile a visual layout of where SKUs are in the facility.
+Once all assignments and distance evaluations are completed, these SKUS will be exported into a file
+This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
 """
 
 #random
@@ -171,7 +181,7 @@ if gui_values['random'] == True:
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
         randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
-    pass  # export into excel sheet
+    exportFiles(randomSKU, randomVisualSKU, randomOrderLines, randomDistance, exportLocation, "random")
 
 # coi
 if gui_values['coi'] == True:
@@ -182,7 +192,7 @@ if gui_values['coi'] == True:
     for orderLine in coiOrderLines:
         coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
-    pass  # export into excel sheet
+    exportFiles(coiSKU, coiVisualSKU, coiOrderLines, coiDistance, exportLocation, "coi")
 
 # weight
 if gui_values['weight'] == True:
@@ -193,7 +203,7 @@ if gui_values['weight'] == True:
     for orderLine in weightOrderLines:
         weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
-    pass  # export into excel sheet
+    exportFiles(weightSKU, weightVisualSKU, weightOrderLines, weightDistance, exportLocation, "weight")
 
 # abc horizontal
 if gui_values['across'] == True:
@@ -204,7 +214,7 @@ if gui_values['across'] == True:
     for orderLine in abcHorizOrderLines:
         abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     abcHorizVisualSKU = visualSKUOutput(abcHorizSKU, aisleTuple)
-    pass  # export into excel sheet
+    exportFiles(abcHorizSKU, abcHorizVisualSKU, abcHorizOrderLines, abcHDistance, exportLocation, "across")
 
 
 # abc vertical
@@ -216,13 +226,10 @@ if gui_values['vertical'] == True:
     for orderLine in abcVertiOrderLines:
         abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
-    pass  # export into excel sheet
+    exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistance, exportLocation, "vertical")
 
 """
-Once all assignments and distance evaluations are completed, these SKUS will be exported into a file
-This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
+This code block will run the final evaluation model to compare the different models
 """
-    
-#TODO - export files based on layout that Michael gave me
 
 
