@@ -15,7 +15,8 @@ from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import excelApp, spaceAllocationDataFrame
 from sales_data import specsDataComp, specsAddSpaceAllocation #,salesDataComp
-from export import exportFiles, visualSKUOutput
+from export import exportFiles, visualSKUOutput, evaluationFile
+from store_order import storeOrderComp
 
 """
 This code block will run GUI and retrieve all paths for all files
@@ -51,10 +52,10 @@ else:
 #store orders/pick list
 
 if gui_values['storeOrder'] != "":
-    pickList = pd.read_excel(gui_values['storeOrder'])
+    storeOrderData = pd.read_excel(gui_values['storeOrder'])
 else:
     print("Store order file not specified. Default file will be used.")
-    pickList = pd.read_excel(r"default\Pick List Test.xlsx")
+    storeOrderData = pd.read_excel(r"default\sample order line.xlsx")
     
 """
 This block of code will be used to compile order lines together. 
@@ -81,6 +82,12 @@ else:
     print("Export location not specified. ../python/export will be used as path ")
     exportLocation = r"export"
 
+#store order date
+if gui_values['salesYear'] == "" or gui_values['salesMonth'] == "" or gui_values['salesDay'] == "":
+    print("One of the fields are missing. Default day of 05/11/2020 will be used.")
+    orderDate = "5/11/2020"
+else:
+    orderDate = gui_values['salesMonth'] + "/" + gui_values['salesDay'] + "/" + gui_values['salesYear'] 
 
 #Tuple for week range
 try:  
@@ -90,12 +97,11 @@ except:
     weekRange = (8,16)
 
 """
-Sales data needs to be a list of multiple dataframes (one dataframe for each year)
-This code will create dictionary of all sheets
-Update: not needed in this use case scenario, specification file compilation will be done instead
+Store orders must be compiled to be for a specific date, divided into multiple data frames for each store
+This will return back a dictionary of data frames with every data frame being one store
 """
 
-#salesDataFrame = salesDataComp(salesDataDict)
+pickListDict = storeOrderComp(storeOrderData, orderDate)
 
 """
 This will take the specifications file and modify it for use in VBA model and future use cases
@@ -176,7 +182,8 @@ if gui_values['random'] == True:
     randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
     # calculate assignment and divide store orders
-    randomOrderLines = orderLineDivision(specs, pickList, randomSKU)
+    #randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
+    randomOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, randomSKU)
     randomDistance = []  # distance for each towmotor
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
         randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -187,7 +194,7 @@ if gui_values['random'] == True:
 if gui_values['coi'] == True:
     coiAllocation = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable)
     coiSKU = SKUAssignment(locationDistance, coiAllocation)
-    coiOrderLines = orderLineDivision(specs, pickList, coiSKU)
+    coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
     coiDistance = []
     for orderLine in coiOrderLines:
         coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -198,7 +205,7 @@ if gui_values['coi'] == True:
 if gui_values['weight'] == True:
     weightAllocation = spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable)
     weightSKU = SKUAssignment(locationDistance, weightAllocation)
-    weightOrderLines = orderLineDivision(specs, pickList, weightSKU)
+    weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
     weightDistance = []
     for orderLine in weightOrderLines:
         weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -209,7 +216,7 @@ if gui_values['weight'] == True:
 if gui_values['across'] == True:
     horizLocation = orderByHorizontal(locationDistance, aisleTuple)
     abcHorizSKU= SKUAssignment(horizLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcHorizOrderLines = orderLineDivision (specs, pickList, abcHorizSKU)
+    abcHorizOrderLines = orderLineDivision (specs, pickListDict, abcHorizSKU)
     abcHDistance = []
     for orderLine in abcHorizOrderLines:
         abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -221,7 +228,7 @@ if gui_values['across'] == True:
 if gui_values['vertical'] == True:
     vertiLocation = orderByVertical(locationDistance, aisleTuple)
     abcVertiSKU= SKUAssignment(vertiLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcVertiOrderLines = orderLineDivision (specs, pickList, abcVertiSKU)
+    abcVertiOrderLines = orderLineDivision (specs, pickListDict, abcVertiSKU)
     abcVDistance = []
     for orderLine in abcVertiOrderLines:
         abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))

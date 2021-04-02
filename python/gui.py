@@ -63,6 +63,17 @@ def gui_method():
             sg.InputText(size=(5,1), key="endWeek")
         ],
         [
+            sg.Text("Select store order date to analyze:", font=bold_method)
+        ],
+        [
+            sg.Text("Month", size=(10,1)),
+            sg.InputText(size=(5,1), key="salesMonth"),
+            sg.Text("Day", size=(10,1)),
+            sg.InputText(size=(5,1), key="salesDay"),
+            sg.Text("Year", size=(10,1)),
+            sg.InputText(size=(5,1), key="salesYear")
+        ],
+        [
             sg.Checkbox("Would you like to compute Space Allocation Model? If not, previous results will be used.", default=True, key="spaceAllocate"),
         ],
         [
@@ -104,8 +115,7 @@ def gui_method():
         [
             sg.Submit(), sg.Cancel()
         ]
-        
-        ]
+]
     
     
     window = sg.Window("Metro SKU Assignment Tool").Layout(layout_gui)

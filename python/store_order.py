@@ -7,6 +7,10 @@ Created on Fri Mar 12 02:12:33 2021
 
 import pandas as pd
 
+"""
+This will take the order lines and compile into useable format to create pick lists.
+Store orders are compiled as seperate dictionaries, so towmotors don't pick orders for multiple stores on the same pallet.
+"""
 def storeOrderComp(storeOrderList, orderDate):
     
     storeOrderList = storeOrderList[storeOrderList['Date facture'] == orderDate]

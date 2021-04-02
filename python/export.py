@@ -35,7 +35,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
             actualCol = listColumns.index(colNo)
             #if column is even
             if actualCol%2 != 0:
-                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]+1):
+                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
@@ -53,7 +53,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
                 counter+=3
             #if column is odd
             else:     
-                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]+1):
+                for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
