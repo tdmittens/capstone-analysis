@@ -74,5 +74,8 @@ def specsDataComp (specs, salesDataDict, weekRange):
 def specsAddSpaceAllocation (specs, spaceAllocation):
     spaceAllocation = spaceAllocation[['SAP #','Number of pick pallets (vi)']]
     specs = specs.merge(spaceAllocation, left_on='SAP #', right_on='SAP #', how='inner')
+    specs['Items/Pallet'] = specs['Ti']*specs['Hi']
+    specs['Flow'] = specs['# items/time period']/specs['Items/Pallet']
+    specs['Restocks'] = specs['Flow']/specs['Number of pick pallets (vi)']
     #specs.drop(['SAP #'], axis=1, inplace=True)
     return specs
