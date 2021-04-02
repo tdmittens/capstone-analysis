@@ -29,7 +29,7 @@ def exportFiles (SKUAssignment, orderLines, totalDistance, aisleTuple):
             #should be done on left hand side or right hand side
             actualCol = listColumns.index(colNo)
             #if column is even
-            if actualCol%2 == 0:
+            if actualCol%2 != 0:
                 for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
@@ -41,21 +41,29 @@ def exportFiles (SKUAssignment, orderLines, totalDistance, aisleTuple):
                         if df.empty:
                             pass #keep cells empty
                         else:
-                            array[rowNo][counter] = df.iloc[0]['SKU']
-                            array[rowNo][counter+1] = df.iloc[0]['SKU']
+                            array[rowNo][counter] = df.loc[df['A/B'] == 'A'].iloc[0]['SKU']
+                            array[rowNo][counter+1] = df.loc[df['A/B'] == 'B'].iloc[0]['SKU']
                             #https://stackoverflow.com/questions/134934/display-number-with-leading-zeros
                             array[rowNo][counter+2] = "{:02d}".format(actualCol+1) + "{:02d}".format(rowNo+1) #+1 to start from 1 instead of 0
                 counter+=3
             #if column is odd
             else:     
-                counter+=3
                 for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
                     if rowNo in aisleTuple:
                         array[rowNo][counter] = "X"
-                        array[rowNo][counter-1] = "X"
-                        array[rowNo][counter-2] = "X"
+                        array[rowNo][counter+1] = "X"
+                        array[rowNo][counter+2] = "X"
                     else:
-                        pass
+                        #create dataframe that is only
+                        df = SKUAssignment.loc[(SKUAssignment['Row']==rowNo) & (SKUAssignment['Column']==colNo)]
+                        if df.empty:
+                            pass #keep cells empty
+                        else:
+                            array[rowNo][counter+2] = df.loc[df['A/B'] == 'A'].iloc[0]['SKU']
+                            array[rowNo][counter+1] = df.loc[df['A/B'] == 'B'].iloc[0]['SKU']
+                            #https://stackoverflow.com/questions/134934/display-number-with-leading-zeros
+                            array[rowNo][counter] = "{:02d}".format(actualCol+1) + "{:02d}".format(rowNo+1) #+1 to start from 1 instead of 0
+                counter+=3
         #if column is not in list, just fill entire column with X
         else:
             for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
