@@ -42,6 +42,7 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int)
     #create new workbook
     try:
         ExcelWorksheet = ExcelApp.Workbooks.Open(newPath)
+        print("Space allocation workbook is opening. Evaluation will now begin.")
     except:
         print("File could not be opened, the application will try to open it again in 10 seconds.")
         time.sleep(10)
@@ -98,7 +99,7 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int)
     #update - async unreliable, add finite time delay for now
         
     ExcelApp.Application.Quit()
-    print("Waiting for file to close...")
+    print("Evaluation complete. Waiting for file to close...")
     time.sleep(10)
     space_allocation_df = pd.read_excel(inputPath, "Solver Sheet")
     space_allocation_df.drop(0,inplace=True)

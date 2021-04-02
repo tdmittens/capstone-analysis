@@ -8,7 +8,12 @@ Created on Tue Mar 30 20:53:53 2021
 import numpy as np
 import pandas as pd
 
-def exportFiles (SKUAssignment, orderLines, totalDistance, aisleTuple):
+
+"""
+This function will take SKU assignment and present it in a visual form that
+will be exported to an Excel sheet for use by company
+"""
+def visualSKUOutput (SKUAssignment, aisleTuple):
     
     #Aisle tuple - start aisles at 0 instead of 1
     #https://stackoverflow.com/questions/17418108/elegant-way-to-perform-tuple-arithmetic
@@ -69,6 +74,27 @@ def exportFiles (SKUAssignment, orderLines, totalDistance, aisleTuple):
             for rowNo in range(0, aisleTuple[len(aisleTuple)-1]):
                 array[rowNo][counter] = "X"
             counter+=1
+    return array
+
+"""
+
+"""
+def exportFiles():
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
