@@ -12,9 +12,11 @@ import json
 
 def gui_method(): 
     
+    bold_method = ('Arial', 12, 'bold')
+    
     layout_gui = [
         [
-            sg.Text("This form requires files listed below to calculate model that returns the lowest distance.")
+            sg.Text("This form requires files listed below to calculate model that returns the lowest distance.", font=bold_method)
         ],
         [
             sg.Text("File locations left blank will use default values.")
@@ -50,7 +52,7 @@ def gui_method():
             sg.FolderBrowse(),
         ],
         [
-            sg.Text("What range of weeks would you like to look at?")
+            sg.Text("What range of weeks would you like to look at?", font=bold_method)
         ],
         [
             sg.Text("Starting Week", size=(30,1)),
@@ -61,7 +63,7 @@ def gui_method():
             sg.InputText(size=(5,1), key="endWeek")
         ],
         [
-            sg.Text("Space Allocation Parameters:")
+            sg.Text("Space Allocation Parameters:", font=bold_method)
         ],
         [
             sg.Text("Max Spaces per SKU", size=(30,1)),
@@ -76,7 +78,18 @@ def gui_method():
             sg.InputText(size=(5,1), key="totalSKU")
         ],
         [
-            sg.Text("Determine SKU List to Calculate")
+            sg.Text("Aisle Declaration (ex. 1st row, 22nd row, 50th row) ", font=bold_method)
+        ],
+        [
+            sg.Text("Top Aisle", size=(10,1)),
+            sg.InputText(size=(5,1), key="aisleTop"),
+            sg.Text("Cross Aisle", size=(10,1)),
+            sg.InputText(size=(5,1), key="aisleMiddle"),
+            sg.Text("Bottom Aisle", size=(10,1)),
+            sg.InputText(size=(5,1), key="aisleBottom")
+        ],
+        [
+            sg.Text("Determine SKU List to Calculate", font=bold_method)
         ],
         [
             sg.Checkbox("Random", default=False, key="random"),

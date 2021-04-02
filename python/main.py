@@ -15,7 +15,7 @@ from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import excelApp
 from sales_data import specsDataComp, specsAddSpaceAllocation #,salesDataComp
-#from export import exportFiles
+from export import exportFiles, visualSKUOutput
 
 """
 This code block will run GUI and retrieve all paths for all files
@@ -126,11 +126,24 @@ spaceAllocationTable = excelApp(specs,
 #add space allocation to specs dataframe
 specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
 
+"""
+This will set the aisle tuple based off inputs given by user
+"""
+
+if gui_values['aisleTop'] != "" or gui_values['aisleMiddle'] != "" or gui_values['aisleBottom'] != "":
+    print("One of the cross aisles are missing. The default values of 1, 23, 52 will be used.")
+    aisleTuple = (1,23,52)
+else:
+    try:
+        aisleTuple = ((int)(gui_values['aisleTop']),(int)(gui_values['aisleMiddle']),(int)(gui_values['aisleBottom']))
+    except:
+        print("Inputs for cross aisles are invalid. The The default value of 1, 23, 52 will be used.")
+        aisleTuple = (1,23,52)
+
 # additional variables
-availSpaces = 1541*2
+availSpaces = totalSpaces
 ABCfreq = (0.5, 0.8, 1)
 ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
-aisleTuple = (1,23,52)
 
 # determine distance for each pick spot
 locationDistance = layoutDistance(layout)
@@ -149,6 +162,7 @@ if gui_values['random'] == True:
     randomDistance = []  # distance for each towmotor
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
         randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
     pass  # export into excel sheet
 
 # coi
@@ -159,6 +173,7 @@ if gui_values['coi'] == True:
     coiDistance = []
     for orderLine in coiOrderLines:
         coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
     pass  # export into excel sheet
 
 # weight
@@ -168,6 +183,7 @@ if gui_values['weight'] == True:
     weightDistance = []
     for orderLine in weightOrderLines:
         weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
     pass  # export into excel sheet
 
 # abc horizontal
@@ -178,6 +194,7 @@ if gui_values['across'] == True:
     abcHDistance = []
     for orderLine in abcHorizOrderLines:
         abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    abcHorizVisualSKU = visualSKUOutput(abcHorizSKU, aisleTuple)
     pass  # export into excel sheet
 
 
@@ -189,6 +206,7 @@ if gui_values['vertical'] == True:
     abcVDistance = []
     for orderLine in abcVertiOrderLines:
         abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+    abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
     pass  # export into excel sheet
 
 """
