@@ -63,6 +63,9 @@ def gui_method():
             sg.InputText(size=(5,1), key="endWeek")
         ],
         [
+            sg.Checkbox("Would you like to compute Space Allocation Model? If not, previous results will be used.", default=True, key="spaceAllocate"),
+        ],
+        [
             sg.Text("Space Allocation Parameters:", font=bold_method)
         ],
         [
@@ -92,11 +95,11 @@ def gui_method():
             sg.Text("Determine SKU List to Calculate", font=bold_method)
         ],
         [
-            sg.Checkbox("Random", default=False, key="random"),
-            sg.Checkbox("COI", default=False, key="coi"),
-            sg.Checkbox("Weight", default=False, key="weight"),
-            sg.Checkbox("ABC (across)", default=False, key="across"),
-            sg.Checkbox("ABC (vertical)", default=False, key="vertical")
+            sg.Checkbox("Random", default=True, key="random"),
+            sg.Checkbox("COI", default=True, key="coi"),
+            sg.Checkbox("Weight", default=True, key="weight"),
+            sg.Checkbox("ABC (across)", default=True, key="across"),
+            sg.Checkbox("ABC (vertical)", default=True, key="vertical")
         ],
         [
             sg.Submit(), sg.Cancel()

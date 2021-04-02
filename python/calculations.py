@@ -63,6 +63,7 @@ def weightAssignment(specs):
 def abcAssignment(specs):
     specs = specs.sort_values(by=['Restocks'], ascending=False)
     specs['cumsum'] = specs['Number of pick pallets (vi)'].cumsum()
+    specs = specs.drop(['Number of pick pallets (vi)'], axis=1)
     return specs
 
 
@@ -84,9 +85,12 @@ def spaceAllocationMultiply(SKUList, SpaceAllocation):
 # SKU assignment
 
 
-def SKUAssignment(locationDistance, assignment):
-    locationDistance['SKU'] = assignment['SAP #']
-    return locationDistance
+def SKUAssignment(locationDistances, assignment):
+    #df = locationDistances.sort_values(by=['Distance'], ascending=True)
+    append_df = assignment['SAP #']
+    df = locationDistances.join(append_df)
+    df.rename(columns={'SAP #':'SKU'}, inplace=True)
+    return df
 
 # def ABCAssignment(locationDistance, assignment, abcType:string):
 #    if abcType is 'across':

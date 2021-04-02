@@ -101,13 +101,15 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int)
     ExcelApp.Application.Quit()
     print("Evaluation complete. Waiting for file to close...")
     time.sleep(10)
+    return spaceAllocationDataFrame(inputPath)
+
+def spaceAllocationDataFrame(inputPath):
     space_allocation_df = pd.read_excel(inputPath, "Solver Sheet")
     space_allocation_df.drop(0,inplace=True)
     space_allocation_df.drop(space_allocation_df.columns[0:7],axis=1,inplace=True)
     space_allocation_df.drop(space_allocation_df.columns[3:5],axis=1,inplace=True)
     space_allocation_df.columns = ["SAP #","Zij","Number of pick pallets (vi)"]
     return space_allocation_df
-    
     #set reference to range of cells
     
 #run function

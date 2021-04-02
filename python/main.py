@@ -13,7 +13,7 @@ from order_division import orderLineDivision
 from distance_algo import distanceAlgo
 from gui import gui_method
 from distance_calc import distanceCalculation
-from space_allocation import excelApp
+from space_allocation import excelApp, spaceAllocationDataFrame
 from sales_data import specsDataComp, specsAddSpaceAllocation #,salesDataComp
 from export import exportFiles, visualSKUOutput
 
@@ -99,29 +99,35 @@ specs = specsDataComp(specs, salesDataDict, weekRange)
 This will import the data to an Excel File to use OpenSolver
 Lastly, it will return a dataframe with SpaceAllocation
 """
-if gui_values['maxSpaces'] != "":
-    maxSpaces = (int)(gui_values['maxSpaces'])
+if gui_values['spaceAllocate'] == True:
+    if gui_values['maxSpaces'] != "":
+        maxSpaces = (int)(gui_values['maxSpaces'])
+    else:
+        print("Value not entered. Max spaces set to 8.")
+        maxSpaces = 8
+    
+    if gui_values['totalSpaces'] != "":
+        totalSpaces = (int)(gui_values['totalSpaces'])
+    else:
+        print("Value not entered. Total spaces set to 2688.")
+        totalSpaces = 2688
+    
+    if gui_values['totalSKU'] != "":
+        totalSKU = (int)(gui_values['totalSKU'])
+    else:
+        print("Value not entered. Total SKUs set to 1541.")
+        totalSKU = 1541
+    
+    spaceAllocationTable = excelApp(specs,
+             r"default\space_allocation.xlsm",
+             maxSpaces,
+             totalSpaces,
+             totalSKU)
 else:
-    print("Value not entered. Max spaces set to 8.")
-    maxSpaces = 8
-
-if gui_values['totalSpaces'] != "":
-    totalSpaces = (int)(gui_values['totalSpaces'])
-else:
-    print("Value not entered. Total spaces set to 2688.")
-    totalSpaces = 2688
-
-if gui_values['totalSKU'] != "":
-    totalSKU = (int)(gui_values['totalSKU'])
-else:
-    print("Value not entered. Total SKUs set to 1541.")
-    totalSKU = 1541
-
-spaceAllocationTable = excelApp(specs,
-         r"default\space_allocation.xlsm",
-         maxSpaces,
-         totalSpaces,
-         totalSKU)
+    spaceAllocationTable = spaceAllocationDataFrame(r"default\space_allocation.xlsm")
+    print("Space allocation model did not run. Previous model will be used instead.")
+    print("Total spaces set to 2688.")
+    totalSpaces = 2688 
 
 #add space allocation to specs dataframe
 specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
@@ -130,7 +136,7 @@ specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
 This will set the aisle tuple based off inputs given by user
 """
 
-if gui_values['aisleTop'] != "" or gui_values['aisleMiddle'] != "" or gui_values['aisleBottom'] != "":
+if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
     print("One of the cross aisles are missing. The default values of 1, 23, 52 will be used.")
     aisleTuple = (1,23,52)
 else:
@@ -152,11 +158,13 @@ locationDistance = layoutDistance(layout)
 """
 This block of code will implement SKU allocation models, dependant if the user selected them in the GUI.
 It will also determine the minimum distance taken for each of the models as well.
+For each heuristic, it will also compile a visual layout of where SKUs are in the facility.
 """
 
 #random
 if gui_values['random'] == True:
-    randomSKU = SKUAssignment(locationDistance, spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable))  # sku assignment
+    randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
+    randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
     # calculate assignment and divide store orders
     randomOrderLines = orderLineDivision(specs, pickList, randomSKU)
     randomDistance = []  # distance for each towmotor
@@ -167,8 +175,8 @@ if gui_values['random'] == True:
 
 # coi
 if gui_values['coi'] == True:
-    #coiAsgn = coiAssignment(specs, pickFrequency)
-    coiSKU = SKUAssignment(locationDistance, spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable))
+    coiAllocation = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable)
+    coiSKU = SKUAssignment(locationDistance, coiAllocation)
     coiOrderLines = orderLineDivision(specs, pickList, coiSKU)
     coiDistance = []
     for orderLine in coiOrderLines:
@@ -178,7 +186,8 @@ if gui_values['coi'] == True:
 
 # weight
 if gui_values['weight'] == True:
-    weightSKU = SKUAssignment(locationDistance, spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable))
+    weightAllocation = spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable)
+    weightSKU = SKUAssignment(locationDistance, weightAllocation)
     weightOrderLines = orderLineDivision(specs, pickList, weightSKU)
     weightDistance = []
     for orderLine in weightOrderLines:
