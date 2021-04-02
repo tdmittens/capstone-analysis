@@ -14,7 +14,7 @@ from distance_algo import distanceAlgo
 from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import excelApp
-from sales_data import specsDataComp #,salesDataComp
+from sales_data import specsDataComp, specsAddSpaceAllocation #,salesDataComp
 #from export import exportFiles
 
 """
@@ -54,7 +54,7 @@ if gui_values['storeOrder'] != "":
     pickList = pd.read_excel(gui_values['storeOrder'])
 else:
     print("Store order file not specified. Default file will be used.")
-    pickList = pd.read_excel(r"default\sample order line.xlsx")
+    pickList = pd.read_excel(r"default\Pick List Test.xlsx")
     
 """
 This block of code will be used to compile order lines together. 
@@ -99,13 +99,32 @@ specs = specsDataComp(specs, salesDataDict, weekRange)
 This will import the data to an Excel File to use OpenSolver
 Lastly, it will return a dataframe with SpaceAllocation
 """
+if gui_values['maxSpaces'] != "":
+    maxSpaces = (int)(gui_values['maxSpaces'])
+else:
+    print("Value not entered. Max spaces set to 8.")
+    maxSpaces = 8
+
+if gui_values['totalSpaces'] != "":
+    totalSpaces = (int)(gui_values['totalSpaces'])
+else:
+    print("Value not entered. Total spaces set to 2688.")
+    totalSpaces = 2688
+
+if gui_values['totalSKU'] != "":
+    totalSKU = (int)(gui_values['totalSKU'])
+else:
+    print("Value not entered. Total SKUs set to 1541.")
+    totalSKU = 1541
+
 spaceAllocationTable = excelApp(specs,
          r"default\space_allocation.xlsm",
-         8,
-         2688,
-         1541,
-         r"default\space_allocation_2.xlsm")
+         maxSpaces,
+         totalSpaces,
+         totalSKU)
 
+#add space allocation to specs dataframe
+specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
 
 # additional variables
 availSpaces = 1541*2
@@ -124,7 +143,7 @@ It will also determine the minimum distance taken for each of the models as well
 
 #random
 if gui_values['random'] == True:
-    randomSKU = SKUAssignment(locationDistance, randomAssignment(specs))  # sku assignment
+    randomSKU = SKUAssignment(locationDistance, spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable))  # sku assignment
     # calculate assignment and divide store orders
     randomOrderLines = orderLineDivision(specs, pickList, randomSKU)
     randomDistance = []  # distance for each towmotor

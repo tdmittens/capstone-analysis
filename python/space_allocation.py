@@ -32,7 +32,7 @@ import os, os.path
 import numpy as np
 import time
 
-def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int, exportPath):
+def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int):
     ExcelApp = win32com.client.Dispatch("Excel.Application")
     ExcelApp.Visible = True
     
@@ -69,9 +69,9 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int,
              ).Value = specsMod
     
     #assign locations based off layout of excel sheet
-    loc1 = ExcelWorksheet.Worksheets("Sheet1").Range("Q2")
-    loc2 = ExcelWorksheet.Worksheets("Sheet1").Range("Q4")
-    loc3 = ExcelWorksheet.Worksheets("Sheet1").Range("Q6")
+    loc1 = ExcelWorksheet.Worksheets("Sheet1").Range("H2")
+    loc2 = ExcelWorksheet.Worksheets("Sheet1").Range("H4")
+    loc3 = ExcelWorksheet.Worksheets("Sheet1").Range("H6")
     
     #assign value to locations
     loc1.value = SpacesPerSKU 
