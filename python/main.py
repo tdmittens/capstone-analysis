@@ -5,6 +5,7 @@ Before creating web app, this will serve as main file for all calculations
 import pandas as pd
 import math
 import PySimpleGUI as sg
+import asyncio
 
 from layout import layoutDistance, orderByVertical, orderByHorizontal
 from order_lines import orderLineComp
@@ -175,10 +176,11 @@ It will also determine the minimum distance taken for each of the models as well
 For each heuristic, it will also compile a visual layout of where SKUs are in the facility.
 Once all assignments and distance evaluations are completed, these SKUS will be exported into a file
 This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
+Update: Async processes to speed up processing time
 """
 
 #random
-if gui_values['random'] == True:
+async def randomProcess (specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
     randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
     # calculate assignment and divide store orders
@@ -191,10 +193,10 @@ if gui_values['random'] == True:
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines, randomDistance, exportLocation, "random")
 
 # coi
-if gui_values['coi'] == True:
+async def coiProcess (specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
     coiAllocation = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable)
     coiSKU = SKUAssignment(locationDistance, coiAllocation)
-    coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
+    coiOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, coiSKU)
     coiDistance = []
     for orderLine in coiOrderLines:
         coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -202,10 +204,10 @@ if gui_values['coi'] == True:
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines, coiDistance, exportLocation, "coi")
 
 # weight
-if gui_values['weight'] == True:
+async def weightProcess (specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
     weightAllocation = spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable)
     weightSKU = SKUAssignment(locationDistance, weightAllocation)
-    weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
+    weightOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, weightSKU)
     weightDistance = []
     for orderLine in weightOrderLines:
         weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -213,10 +215,10 @@ if gui_values['weight'] == True:
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines, weightDistance, exportLocation, "weight")
 
 # abc horizontal
-if gui_values['across'] == True:
+async def acrossProcess (specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
     horizLocation = orderByHorizontal(locationDistance, aisleTuple)
     abcHorizSKU= SKUAssignment(horizLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcHorizOrderLines = orderLineDivision (specs, pickListDict, abcHorizSKU)
+    abcHorizOrderLines = orderLineDivision (specs, {key: pickListDict[key] for key in [100021,100046]}, abcHorizSKU)
     abcHDistance = []
     for orderLine in abcHorizOrderLines:
         abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
@@ -225,15 +227,59 @@ if gui_values['across'] == True:
 
 
 # abc vertical
-if gui_values['vertical'] == True:
+async def vertiProcess (specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
     vertiLocation = orderByVertical(locationDistance, aisleTuple)
     abcVertiSKU= SKUAssignment(vertiLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcVertiOrderLines = orderLineDivision (specs, pickListDict, abcVertiSKU)
+    abcVertiOrderLines = orderLineDivision (specs, {key: pickListDict[key] for key in [100021,100046]}, abcVertiSKU)
     abcVDistance = []
     for orderLine in abcVertiOrderLines:
         abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
     abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
     exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistance, exportLocation, "vertical")
+
+async def mainProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation):
+    if gui_values['random'] == True:
+        task1 = asyncio.create_task(randomProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    else: task1 = ""
+    if gui_values['coi'] == True:
+        task2 = asyncio.create_task(coiProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    else: task2 = ""
+    if gui_values['weight'] == True:
+            task3 = asyncio.create_task(weightProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    else: task3 = ""
+    if gui_values['across'] == True:
+            task4 = asyncio.create_task(acrossProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    else: task4 = ""
+    if gui_values['vertical'] == True:
+            task5 = asyncio.create_task(vertiProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    else: task5 = ""
+
+    await task1
+    await task2
+    await task3
+    await task4
+    await task5
+
+
+"""
+This code will ensure that loop continues to run even if inside Jupyter env
+https://stackoverflow.com/questions/55409641/asyncio-run-cannot-be-called-from-a-running-event-loop
+"""
+
+try:
+    loop = asyncio.get_running_loop()
+except RuntimeError:  # if cleanup: 'RuntimeError: There is no current event loop..'
+    loop = None
+
+if loop and loop.is_running():
+    print('Async event loop already running')
+    tsk = loop.create_task(mainProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+    # ^-- https://docs.python.org/3/library/asyncio-task.html#task-object
+else:
+    print('Starting new event loop')
+    asyncio.run(mainProcess(specs, spaceAllocationTable, locationDistance, pickListDict, aisleTuple, exportLocation))
+
+print("Files for each heuristic have finished compiling.")
 
 """
 This code block will run the final evaluation model to compare the different models
