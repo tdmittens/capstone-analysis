@@ -81,7 +81,8 @@ This will create a file to view for each heuristic
 """
 def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, exportPath:str, heuristicType:str):
     #https://xlsxwriter.readthedocs.io/example_pandas_multiple.html
-    writer = pd.ExcelWriter(exportPath + "/" + heuristicType + ".xlsx", engine='xlsxwriter')
+    path = exportPath + "/" + heuristicType + ".xlsx"
+    writer = pd.ExcelWriter(path, engine='xlsxwriter')
     
     visual_sku_df = pd.DataFrame(visualSKU)
     order_lines_df = pd.DataFrame(orderLines).T
@@ -92,6 +93,7 @@ def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, export
     order_lines_df.to_excel(writer, sheet_name='Order Line Pick Up')
     order_distance_df.to_excel(writer, sheet_name='Order Line Distances')
 
+    print("The file for " + heuristicType + " has been compiled. It has been saved to " + path)
     # Close the Pandas Excel writer and output the Excel file.
     writer.save()
 

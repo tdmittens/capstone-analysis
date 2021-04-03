@@ -90,6 +90,7 @@ def SKUAssignment(locationDistances, assignment):
     append_df = assignment['SAP #']
     df = locationDistances.join(append_df)
     df.rename(columns={'SAP #':'SKU'}, inplace=True)
+    print("SKU Assignment for this heuristic method has been completed.")
     return df
 
 # def ABCAssignment(locationDistance, assignment, abcType:string):
