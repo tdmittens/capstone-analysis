@@ -36,7 +36,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
             #if column is even
             if actualCol%2 != 0:
                 for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]):
-                    if rowNo in aisleTuple:
+                    if rowNo in aisleTuple and rowNo != 0:
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
                         array[rowNo][counter+2] = "X"
@@ -80,27 +80,53 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
 This will create a file to view for each heuristic
 """
 def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, exportPath:str, heuristicType:str):
-    #https://xlsxwriter.readthedocs.io/example_pandas_multiple.html
+    
     path = exportPath + "/" + heuristicType + ".xlsx"
-    writer = pd.ExcelWriter(path, engine='xlsxwriter')
     
     visual_sku_df = pd.DataFrame(visualSKU)
     order_lines_df = pd.DataFrame(orderLines).T
     order_distance_df = pd.DataFrame(orderDistance)
     
-    assignmentSKU.to_excel(writer, sheet_name='SKU Assignment')
-    visual_sku_df.to_excel(writer, sheet_name='SKU Layout')
-    order_lines_df.to_excel(writer, sheet_name='Order Line Pick Up')
-    order_distance_df.to_excel(writer, sheet_name='Order Line Distances')
-
-    print("The file for " + heuristicType + " has been compiled. It has been saved to " + path)
-    # Close the Pandas Excel writer and output the Excel file.
-    writer.save()
-
-
+    """
+    SKU assignment should have the correct columns 
+    """
+    
+    #obtain list of columns in SKU Assignment
+    listColumns = assignmentSKU['Column'].unique().tolist()
+    listColumns.sort()
+    
+    #fix column numbers
+    for colNo in range(0,np.int_(assignmentSKU['Column'].max())):
+        if colNo in listColumns:
+            actualCol = listColumns.index(colNo)
+            assignmentSKU.loc[assignmentSKU['Column'] == colNo, 'Column'] = actualCol+1
+            
+    #sort by column and reset index
+    assignmentSKU = assignmentSKU.sort_values(['Column', 'Row'], ascending=True).reset_index(drop=True)
+        
+    #https://xlsxwriter.readthedocs.io/example_pandas_multiple.html
+    #https://stackoverflow.com/questions/62618680/overwrite-an-excel-sheet-with-pandas-dataframe-without-affecting-other-sheets
+    """
+    This will delete workbook to ensure file is completely overwritten
+    """
+    with pd.ExcelWriter(path, engine='xlsxwriter') as writer:
+#        workBook = writer.book
+#        try:
+#            workBook.remove()
+#            print("Old workbook has been removed.")
+#        except:
+#            print("Workbook does not exist and cannot be deleted. New workbook will be created.")
+#        finally:
+            assignmentSKU.to_excel(writer, sheet_name='SKU Assignment')
+            visual_sku_df.to_excel(writer, sheet_name='SKU Layout')
+            order_lines_df.to_excel(writer, sheet_name='Order Line Pick Up')
+            order_distance_df.to_excel(writer, sheet_name='Order Line Distances')
+            print("The file for " + heuristicType + " has been compiled. It has been saved to " + path)
+            # Close the Pandas Excel writer and output the Excel file.
+            writer.save()
 
 """
-This will evaluate 
+This will evaluate the different models based off what is decided (distributions, % comparison, etc...)
 """
 def evaluationFile():
     pass

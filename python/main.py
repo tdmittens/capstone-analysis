@@ -241,6 +241,7 @@ if gui_values['vertical'] == True:
     abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
     exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistance, exportLocation, "vertical")
 
+print("All heuristic methods have been completed and results have been exported.")
 """
 This code block will run the final evaluation model to compare the different models
 """
