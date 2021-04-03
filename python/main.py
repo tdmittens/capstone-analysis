@@ -179,6 +179,7 @@ This will require SKU Assignment, Order Lines, and Total Distance for all Order 
 
 #random
 if gui_values['random'] == True:
+    print("Random process has now started.")
     randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
     # calculate assignment and divide store orders
@@ -192,6 +193,7 @@ if gui_values['random'] == True:
 
 # coi
 if gui_values['coi'] == True:
+    print("COI process has now started.")
     coiAllocation = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable)
     coiSKU = SKUAssignment(locationDistance, coiAllocation)
     coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
@@ -203,6 +205,7 @@ if gui_values['coi'] == True:
 
 # weight
 if gui_values['weight'] == True:
+    print("Weight process has now started.")
     weightAllocation = spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable)
     weightSKU = SKUAssignment(locationDistance, weightAllocation)
     weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
@@ -214,6 +217,7 @@ if gui_values['weight'] == True:
 
 # abc horizontal
 if gui_values['across'] == True:
+    print("ABC Across aisle assignment process has now started.")
     horizLocation = orderByHorizontal(locationDistance, aisleTuple)
     abcHorizSKU= SKUAssignment(horizLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
     abcHorizOrderLines = orderLineDivision (specs, pickListDict, abcHorizSKU)
@@ -226,6 +230,7 @@ if gui_values['across'] == True:
 
 # abc vertical
 if gui_values['vertical'] == True:
+    print("ABC Vertical aisle assignment process has now started.")
     vertiLocation = orderByVertical(locationDistance, aisleTuple)
     abcVertiSKU= SKUAssignment(vertiLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
     abcVertiOrderLines = orderLineDivision (specs, pickListDict, abcVertiSKU)

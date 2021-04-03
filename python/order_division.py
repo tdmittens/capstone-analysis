@@ -7,6 +7,7 @@ Created on Sun Feb  7 02:06:12 2021
 
 import pandas as pd
 import numpy as np
+import time
 
 #format of input ({Location}, {SKU})
 #preferred format ({Row}, {Column}, {a/b}, {SKU})
@@ -43,22 +44,33 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
         pickList = pickList.drop(columns=['SAP #'])
         pickList = pickList.merge(skuAssignment, how='left') #issue with merge on unique values, creates duplicates
         pickList['Total Volume'] = pickList['Quantity']*pickList['Case Volume (cuft)']
-        pickList['Order Line'] = np.nan
         pickList = pickList.sort_values(by=['Column','Row'], ascending=True) #sort by columns (the aisles) and rows (locations in the rows)
         pickList.reset_index(inplace=True, drop=True)
         
         #temp and count are temp var, for total weight and pick line, resp.
+#        temp = 0
+#        count = 1
+#
+#        for index in pickList.index:
+#            if (pickList['Total Volume'][index]+temp>maxWeight):
+#                count+=1
+#                temp = 0 + pickList['Total Volume'][index]
+#                pickList['Order Line'][index] = count
+#            else: 
+#                temp = temp + pickList['Total Volume'][index]
+#                pickList['Order Line'][index] = count
         temp = 0
-        count = 1
-        for index in pickList.index:
-            if (pickList['Total Volume'][index]+temp>maxWeight):
+        count = 1     
+        appendList = []
+        for row in pickList.itertuples():
+            if (row[8]+temp>maxWeight): #row[8] is the 9th element in the tuple
                 count+=1
-                temp = 0 + pickList['Total Volume'][index]
-                pickList['Order Line'][index] = count
+                temp = 0 + row[8]
+                appendList.append(count)
             else: 
-                temp = temp + pickList['Total Volume'][index]
-                pickList['Order Line'][index] = count
-        
+                temp = temp + row[8]
+                appendList.append(count)        
+        pickList['Order Line'] = appendList
         
         #convert to tuples for distance algorithm
         
