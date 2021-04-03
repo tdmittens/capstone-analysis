@@ -183,8 +183,8 @@ if gui_values['random'] == True:
     randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
     # calculate assignment and divide store orders
-    #randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
-    randomOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, randomSKU)
+    #randomOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, randomSKU)
+    randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
     randomDistance = []  # distance for each towmotor
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
         randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))

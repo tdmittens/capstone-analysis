@@ -37,7 +37,9 @@ def specsDataComp (specs, salesDataDict, weekRange):
     #returnFrame = pd.DataFrame(columns=["SKU", "Description", "Items/Time Period", "Total"])
     returnFrame = pd.DataFrame()
     for key, df in salesDataDict.items(): #value is the dataframe in this case=
-        if key == list(salesDataDict.keys())[0]: #first sheet should not be merged, https://www.geeksforgeeks.org/python-get-the-first-key-in-dictionary/
+        #first sheet should not be merged, and should be created to be merged on
+        #https://www.geeksforgeeks.org/python-get-the-first-key-in-dictionary/
+        if key == list(salesDataDict.keys())[0]: 
             df.columns = [str(x) for x in range(1,len(df.columns)+1)]
             df.drop(df.index[[0,1,2,3,4]],inplace=True)
             df.drop(df[df["5"] == "Result"].index, inplace=True)

@@ -54,7 +54,7 @@ def visualSKUOutput (SKUAssignment, aisleTuple):
             #if column is odd
             else:     
                 for rowNo in range(aisleTuple[0], aisleTuple[len(aisleTuple)-1]):
-                    if rowNo in aisleTuple:
+                    if rowNo in aisleTuple and rowNo != 0: #update: rowNo!=0 added to omit aisle at top of excel sheet, as it overlapped SKUs in row 1
                         array[rowNo][counter] = "X"
                         array[rowNo][counter+1] = "X"
                         array[rowNo][counter+2] = "X"
