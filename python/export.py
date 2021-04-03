@@ -85,7 +85,7 @@ def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, export
     
     visual_sku_df = pd.DataFrame(visualSKU)
     order_lines_df = pd.DataFrame(orderLines).T
-    order_distance_df = pd.DataFrame(orderDistance).T
+    order_distance_df = pd.DataFrame(orderDistance)
     
     assignmentSKU.to_excel(writer, sheet_name='SKU Assignment')
     visual_sku_df.to_excel(writer, sheet_name='SKU Layout')

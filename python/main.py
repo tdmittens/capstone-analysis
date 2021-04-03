@@ -30,7 +30,7 @@ gui_values = gui_method()
 This will run a new GUI which will show all Console results
 """
 
-sg.Print('Re-routing print to debug window.', do_not_reroute_stdout=False)
+#sg.Print('Re-routing print to debug window.', do_not_reroute_stdout=False)
 
 
 #layout

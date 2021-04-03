@@ -81,4 +81,5 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
                 empty_array.append((df['Row'][index],df['Column'][index]))
             completedOrderLines.append(empty_array)
         
+        print("Store " + str(key) + " order pick lines have been created.")
     return completedOrderLines
