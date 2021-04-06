@@ -9,6 +9,7 @@ Created on Thu Feb 11 14:45:52 2021
 
 
 import pandas as pd
+import numpy as np
 
 """
 This will take layout and compile distance for every location
@@ -29,6 +30,15 @@ def layoutDistance(layout_df):
     locations_df = locations_df.sort_values(by=['Distance'], ascending=True)
     locations_df.reset_index(inplace=True, drop=True)
 
+    #fix column numbers
+    listColumns = locations_df['Column'].unique().tolist()
+    listColumns.sort()
+    
+    for colNo in range(0,np.int_(locations_df['Column'].max())+1):
+        if colNo in listColumns:
+            actualCol = listColumns.index(colNo)
+            locations_df.loc[locations_df['Column'] == colNo, 'Column'] = actualCol+1
+    
     return locations_df
 
 def orderByVertical(locationDistance, aisles):

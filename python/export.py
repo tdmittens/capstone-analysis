@@ -91,15 +91,15 @@ def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, export
     SKU assignment should have the correct columns 
     """
     
-    #obtain list of columns in SKU Assignment
-    listColumns = assignmentSKU['Column'].unique().tolist()
-    listColumns.sort()
-    
-    #fix column numbers
-    for colNo in range(0,np.int_(assignmentSKU['Column'].max())):
-        if colNo in listColumns:
-            actualCol = listColumns.index(colNo)
-            assignmentSKU.loc[assignmentSKU['Column'] == colNo, 'Column'] = actualCol+1
+#    #obtain list of columns in SKU Assignment
+#    listColumns = assignmentSKU['Column'].unique().tolist()
+#    listColumns.sort()
+#    
+#    #fix column numbers
+#    for colNo in range(0,np.int_(assignmentSKU['Column'].max())):
+#        if colNo in listColumns:
+#            actualCol = listColumns.index(colNo)
+#            assignmentSKU.loc[assignmentSKU['Column'] == colNo, 'Column'] = actualCol+1
             
     #sort by column and reset index
     assignmentSKU = assignmentSKU.sort_values(['Column', 'Row'], ascending=True).reset_index(drop=True)

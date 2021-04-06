@@ -175,12 +175,11 @@ if gui_values['random'] == True:
     print("Random process has now started.")
     randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
-    # calculate assignment and divide store orders
-    #randomOrderLines = orderLineDivision(specs, {key: pickListDict[key] for key in [100021,100046]}, randomSKU)
     randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
     randomDistance = []  # distance for each towmotor
     for orderLine in randomOrderLines:  # calculate distance for each towmotor
-        randomDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+        randomDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
+        randomDistance.append(randomDistanceNodes)
     randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines, randomDistance, exportLocation, "random")
 
@@ -192,7 +191,8 @@ if gui_values['coi'] == True:
     coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
     coiDistance = []
     for orderLine in coiOrderLines:
-        coiDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+        coiDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
+        coiDistance.append(coiDistanceNodes)
     coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines, coiDistance, exportLocation, "coi")
 
@@ -204,7 +204,8 @@ if gui_values['weight'] == True:
     weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
     weightDistance = []
     for orderLine in weightOrderLines:
-        weightDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+        weightDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
+        weightDistance.append(weightDistanceNodes)
     weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines, weightDistance, exportLocation, "weight")
 
@@ -216,7 +217,8 @@ if gui_values['across'] == True:
     abcHorizOrderLines = orderLineDivision (specs, pickListDict, abcHorizSKU)
     abcHDistance = []
     for orderLine in abcHorizOrderLines:
-        abcHDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+        abcHDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
+        abcHDistance.append(abcHDistanceNodes)
     abcHorizVisualSKU = visualSKUOutput(abcHorizSKU, aisleTuple)
     exportFiles(abcHorizSKU, abcHorizVisualSKU, abcHorizOrderLines, abcHDistance, exportLocation, "across")
 
@@ -228,8 +230,11 @@ if gui_values['vertical'] == True:
     abcVertiSKU= SKUAssignment(vertiLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
     abcVertiOrderLines = orderLineDivision (specs, pickListDict, abcVertiSKU)
     abcVDistance = []
+    abcVDistanceNodes = []
     for orderLine in abcVertiOrderLines:
-        abcVDistance.append(distanceCalculation(distanceAlgo(orderLine)))
+        abcVDistanceNode = distanceAlgo(orderLine, aisleTuple)
+        abcVDistanceNodes.append(abcVDistanceNode)
+        abcVDistance.append(distanceCalculation(abcVDistanceNode))
     abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
     exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistance, exportLocation, "vertical")
 
