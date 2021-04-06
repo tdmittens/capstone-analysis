@@ -52,6 +52,7 @@ def excelApp(specs, inputPath, SpacesPerSKU:int, TotalSpaces:int, TotalSKUs:int)
             print("File could not be opened on its second try. The program will now close.")
         
     ExcelSheet = ExcelWorksheet.WorkSheets("Sheet1")
+    ExcelSheet.Range("A:Z").ClearContents()
     
     #reconfigure specifications file
     #https://stackoverflow.com/questions/49853193/win32com-error-internal-error-the-buffer-length-is-not-the-sequence-length-e

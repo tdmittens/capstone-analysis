@@ -84,14 +84,6 @@ def gui_method():
             sg.InputText(size=(5,1), key="maxSpaces")
         ],
         [
-            sg.Text("Total Spaces in Layout", size=(30,1)),
-            sg.InputText(size=(5,1), key="totalSpaces")
-        ],
-        [
-            sg.Text("Total number of SKUs", size=(30,1)),
-            sg.InputText(size=(5,1), key="totalSKU")
-        ],
-        [
             sg.Text("Aisle Declaration (ex. 1st row, 22nd row, 50th row) ", font=bold_method)
         ],
         [

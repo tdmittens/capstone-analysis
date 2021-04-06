@@ -111,6 +111,12 @@ This will take the specifications file and modify it for use in VBA model and fu
 specs = specsDataComp(specs, salesDataDict, weekRange)
 
 """
+Determine the distance for each pick spot
+"""
+locationDistance = layoutDistance(layout)
+
+
+"""
 This will import the data to an Excel File to use OpenSolver
 Lastly, it will return a dataframe with SpaceAllocation
 """
@@ -121,23 +127,11 @@ if gui_values['spaceAllocate'] == True:
         print("Value not entered. Max spaces set to 8.")
         maxSpaces = 8
     
-    if gui_values['totalSpaces'] != "":
-        totalSpaces = (int)(gui_values['totalSpaces'])
-    else:
-        print("Value not entered. Total spaces set to 2688.")
-        totalSpaces = 2688
-    
-    if gui_values['totalSKU'] != "":
-        totalSKU = (int)(gui_values['totalSKU'])
-    else:
-        print("Value not entered. Total SKUs set to 1541.")
-        totalSKU = 1541
-    
     spaceAllocationTable = excelApp(specs,
              r"default\space_allocation.xlsm",
              maxSpaces,
-             totalSpaces,
-             totalSKU)
+             len(locationDistance.index), #total spaces in layout distance dataframe
+             len(specs.index)) #amount of SKUS in current specs table
 else:
     spaceAllocationTable = spaceAllocationDataFrame(r"default\space_allocation.xlsm")
     print("Space allocation model did not run. Previous model will be used instead.")
@@ -166,8 +160,6 @@ availSpaces = totalSpaces
 ABCfreq = (0.5, 0.8, 1)
 ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
 
-# determine distance for each pick spot
-locationDistance = layoutDistance(layout)
 
 
 """
