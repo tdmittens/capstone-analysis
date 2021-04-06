@@ -35,11 +35,11 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
         
         """
         will take in the skus to be picked and their quantity, and create lists of skus to be picked that wil be used for calculating distance
-        will assume a weight of 200 kg for now, to be changed
+        will assume a weight of 80 cuft for now, to be changed
         
         """
         
-        maxWeight = 80 #assumtion made at 48"x40"x6' = 
+        maxVolume = 80 #assumtion made at 48"x40"x6' 
         pickList = pickList.merge(weight, left_on='SKU', right_on='SAP #')
         pickList = pickList.drop(columns=['SAP #'])
         pickList = pickList.merge(skuAssignment, how='left') #issue with merge on unique values, creates duplicates
@@ -52,7 +52,7 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
 #        count = 1
 #
 #        for index in pickList.index:
-#            if (pickList['Total Volume'][index]+temp>maxWeight):
+#            if (pickList['Total Volume'][index]+temp>maxVolume):
 #                count+=1
 #                temp = 0 + pickList['Total Volume'][index]
 #                pickList['Order Line'][index] = count
@@ -63,7 +63,7 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
         count = 1     
         appendList = []
         for row in pickList.itertuples():
-            if (row[8]+temp>maxWeight): #row[8] is the 9th element in the tuple
+            if (row[8]+temp>maxVolume): #row[8] is the 9th element in the tuple
                 count+=1
                 temp = 0 + row[8]
                 appendList.append(count)
