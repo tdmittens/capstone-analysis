@@ -56,7 +56,7 @@ if gui_values['storeOrder'] != "":
     storeOrderData = pd.read_excel(gui_values['storeOrder'])
 else:
     print("Store order file not specified. Default file will be used.")
-    storeOrderData = pd.read_excel(r"default\sample order line.xlsx")
+    storeOrderData = pd.read_excel(r"default\order_lines_distance.xlsx")
     
 """
 This block of code will be used to compile order lines together. 
@@ -102,7 +102,7 @@ Store orders must be compiled to be for a specific date, divided into multiple d
 This will return back a dictionary of data frames with every data frame being one store
 """
 
-pickListDict = storeOrderComp(storeOrderData, orderDate)
+pickListDict = storeOrderComp(storeOrderData)
 
 """
 This will take the specifications file and modify it for use in VBA model and future use cases

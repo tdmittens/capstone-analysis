@@ -21,7 +21,10 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
     This for loop will loop through all dataframes in the dictionary, where every df is for a seperate store 
     on the same day.
     """
-    for key, pickList in storeOrderDict.items():
+    #for key, pickList in storeOrderDict.items():
+    for i in range(1):
+        key = 100026
+        pickList = storeOrderDict[key]
         
         #new_df = pd.DataFrame(columns = ["Row", "Column", "A/B", "SKU"])
         weight = specs[['SAP #','Case Volume (cuft)']]
@@ -71,7 +74,7 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
                 temp = temp + row[8]
                 appendList.append(count)        
         pickList['Order Line'] = appendList
-        
+        pickList = pickList.dropna()
         #convert to tuples for distance algorithm
         
         for i in range(0,np.int_(pickList['Order Line'].max())):
@@ -81,6 +84,6 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
                 empty_array.append((df['Row'][index],df['Column'][index]))
             completedOrderLines.append(empty_array)
         
-        #print("Store " + str(key) + " order pick lines have been created.")
+        print("Store " + str(key) + " order pick lines have been created.")
     print("All store order pick lines have been created.")
     return completedOrderLines

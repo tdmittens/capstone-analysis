@@ -11,9 +11,9 @@ import pandas as pd
 This will take the order lines and compile into useable format to create pick lists.
 Store orders are compiled as seperate dictionaries, so towmotors don't pick orders for multiple stores on the same pallet.
 """
-def storeOrderComp(storeOrderList, orderDate):
+def storeOrderComp(storeOrderList):
     
-    storeOrderList = storeOrderList[storeOrderList['Date facture'] == orderDate]
+    #storeOrderList = storeOrderList[storeOrderList['Date facture'] == orderDate]
     storeOrderList = storeOrderList.rename(columns={"Article":"SKU", "Delivery Quantity":"Quantity"})
     storeOrderList = storeOrderList.drop(["SU","Delivery", "Date facture"], axis=1)
     
