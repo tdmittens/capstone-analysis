@@ -18,7 +18,7 @@ def storeOrderComp(storeOrderList):
     storeOrderList['Date facture'] = storeOrderList['Date facture'].dt.strftime('%m/%d/%Y')
     uniqueDates = storeOrderList['Date facture'].unique().tolist()
     uniqueDates.sort()
-    count = 0 #TODO temp
+    #count = 0 #TODO temp
     for orderDate in uniqueDates:
         storeOrderByDate = storeOrderList[storeOrderList['Date facture'] == orderDate]
         
@@ -29,6 +29,6 @@ def storeOrderComp(storeOrderList):
             orderListDict[key] = orderListDict[key].drop(["Ship-to"], axis=1).reset_index().drop(["index"], axis=1)
         orderDictWithDates[orderDate] = orderListDict
         print("Store order for " +  str(orderDate) + " is complete.")
-        count+=1 #TODO temp
-        if count>30: break #TODO temp
+        #count+=1 #TODO temp
+        #if count>30: break #TODO temp
     return orderDictWithDates

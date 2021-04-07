@@ -132,11 +132,11 @@ def exportDistancesOnly (randomD, coiD, weightD, abcHD, abcVD, exportPath):
     
     path = exportPath + "/alldistance.xlsx"
     
-    random_df = pd.DataFrame(randomD)
-    coi_df = pd.DataFrame(coiD)
-    weight_df = pd.DataFrame(weightD)
-    abch_df = pd.DataFrame(abcHD)
-    abcv_df = pd.DataFrame(abcVD)
+    random_df = pd.DataFrame(randomD).T
+    coi_df = pd.DataFrame(coiD).T
+    weight_df = pd.DataFrame(weightD).T
+    abch_df = pd.DataFrame(abcHD).T
+    abcv_df = pd.DataFrame(abcVD).T
                 
     
     with pd.ExcelWriter(path, engine='xlsxwriter') as writer:
@@ -154,7 +154,7 @@ This will evaluate the different models based off what is decided (distributions
 """
 def evaluationFile():
     pass
-
+    
 
 
 
