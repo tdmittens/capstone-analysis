@@ -30,5 +30,5 @@ def storeOrderComp(storeOrderList):
         orderDictWithDates[orderDate] = orderListDict
         print("Store order for " +  str(orderDate) + " is complete.")
         count+=1 #TODO temp
-        if count>3: break #TODO temp
+        if count>30: break #TODO temp
     return orderDictWithDates

@@ -126,6 +126,30 @@ def exportFiles(assignmentSKU, visualSKU:list, orderLines, orderDistance, export
             writer.save()
 
 """
+This will export all the distances for each model
+"""
+def exportDistancesOnly (randomD, coiD, weightD, abcHD, abcVD, exportPath):
+    
+    path = exportPath + "/alldistance.xlsx"
+    
+    random_df = pd.DataFrame(randomD)
+    coi_df = pd.DataFrame(coiD)
+    weight_df = pd.DataFrame(weightD)
+    abch_df = pd.DataFrame(abcHD)
+    abcv_df = pd.DataFrame(abcVD)
+                
+    
+    with pd.ExcelWriter(path, engine='xlsxwriter') as writer:
+        random_df.to_excel(writer, sheet_name='Random')
+        coi_df.to_excel(writer, sheet_name='COI')
+        weight_df.to_excel(writer, sheet_name='Weight')
+        abch_df.to_excel(writer, sheet_name='ABC H')
+        abcv_df.to_excel(writer, sheet_name='ABC V')
+        print("The file for distance has been compiled. It has been saved to " + path)
+        # Close the Pandas Excel writer and output the Excel file.
+        writer.save()
+
+"""
 This will evaluate the different models based off what is decided (distributions, % comparison, etc...)
 """
 def evaluationFile():

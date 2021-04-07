@@ -15,7 +15,7 @@ from gui import gui_method
 from distance_calc import distanceCalculation
 from space_allocation import excelApp, spaceAllocationDataFrame
 from sales_data import specsDataComp, specsAddSpaceAllocation #,salesDataComp
-from export import exportFiles, visualSKUOutput, evaluationFile
+from export import exportFiles, visualSKUOutput, evaluationFile, exportDistancesOnly
 from store_order import storeOrderComp
 
 """
@@ -268,9 +268,17 @@ if gui_values['vertical'] == True:
     abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
     exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistancePeriod, exportLocation, "vertical")
 
+
+exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod, abcVDistancePeriod, abcHDistancePeriod, exportLocation)
+
 print("All heuristic methods have been completed and results have been exported.")
 """
 This code block will run the final evaluation model to compare the different models
 """
+
+
+
+print("Analysis is now complete.")
+
 
 
