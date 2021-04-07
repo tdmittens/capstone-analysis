@@ -71,6 +71,7 @@ def specsDataComp (specs, salesDataDict, weekRange):
     specs.drop(['SKU'], axis=1, inplace=True)
     specs = specs.replace(np.nan,0)
     specs = specs[specs['# items/time period']!=0] #to ensure there is at least one item moving in two years
+    specs = specs[specs['Ti']!=0]                
     return specs
 
 def specsAddSpaceAllocation (specs, spaceAllocation):
@@ -79,5 +80,7 @@ def specsAddSpaceAllocation (specs, spaceAllocation):
     specs['Items/Pallet'] = specs['Ti']*specs['Hi']
     specs['Flow'] = specs['# items/time period']/specs['Items/Pallet']
     specs['Restocks'] = specs['Flow']/specs['Number of pick pallets (vi)']
+
+        
     #specs.drop(['SAP #'], axis=1, inplace=True)
     return specs

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 """
-Before creating web app, this will serve as main file for all calculations
+Created on Wed Apr  7 10:21:42 2021
 
+@author: Tarandeep
 """
 import pandas as pd
 import math
@@ -162,53 +164,6 @@ ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
 
 
 
-"""
-This block of code will implement SKU allocation models, dependant if the user selected them in the GUI.
-It will also determine the minimum distance taken for each of the models as well.
-For each heuristic, it will also compile a visual layout of where SKUs are in the facility.
-Once all assignments and distance evaluations are completed, these SKUS will be exported into a file
-This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
-"""
-
-#random
-if gui_values['random'] == True:
-    print("Random process has now started.")
-    randomAllocation = spaceAllocationMultiply(randomAssignment(specs), spaceAllocationTable)
-    randomSKU = SKUAssignment(locationDistance, randomAllocation)  # sku assignment
-    randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
-    
-    randomDistancePeriod = []  # distance for each towmotor
-    
-    for dailyOrder in randomOrderLines:
-        randomDistance = []
-        for orderLine in dailyOrder:  # calculate distance for each towmotor
-            randomDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
-            randomDistance.append(randomDistanceNodes)
-        randomDistancePeriod.append(randomDistance)
-        
-    randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
-    exportFiles(randomSKU, randomVisualSKU, randomOrderLines, randomDistancePeriod, exportLocation, "random")
-
-# coi
-if gui_values['coi'] == True:
-    print("COI process has now started.")
-    coiAllocation = spaceAllocationMultiply(coiAssignment(specs, pickFrequency), spaceAllocationTable)
-    coiSKU = SKUAssignment(locationDistance, coiAllocation)
-    coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
-    
-    coiDistancePeriod = []
-    
-    for dailyOrder in coiOrderLines:
-        coiDistance = []
-        for orderLine in dailyOrder:
-            coiDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
-            coiDistance.append(coiDistanceNodes)
-        coiDistancePeriod.append(coiDistance)
-        
-    coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
-    exportFiles(coiSKU, coiVisualSKU, coiOrderLines, coiDistancePeriod, exportLocation, "coi")
-
-# weight
 if gui_values['weight'] == True:
     print("Weight process has now started.")
     weightAllocation = spaceAllocationMultiply(weightAssignment(specs), spaceAllocationTable)
@@ -226,51 +181,3 @@ if gui_values['weight'] == True:
 
     weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines, weightDistancePeriod, exportLocation, "weight")
-
-# abc horizontal
-if gui_values['across'] == True:
-    print("ABC Across aisle assignment process has now started.")
-    horizLocation = orderByHorizontal(locationDistance, aisleTuple)
-    abcHorizSKU= SKUAssignment(horizLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcHorizOrderLines = orderLineDivision (specs, pickListDict, abcHorizSKU)
-    
-    abcHDistancePeriod = []
-    
-    for dailyOrder in abcHorizOrderLines:
-        abcHDistance = []
-        for orderLine in dailyOrder:
-            abcHDistanceNodes = distanceCalculation(distanceAlgo(orderLine, aisleTuple))
-            abcHDistance.append(abcHDistanceNodes)
-        abcHDistancePeriod.append(abcHDistance)
-        
-    abcHorizVisualSKU = visualSKUOutput(abcHorizSKU, aisleTuple)
-    exportFiles(abcHorizSKU, abcHorizVisualSKU, abcHorizOrderLines, abcHDistancePeriod, exportLocation, "across")
-
-
-# abc vertical
-if gui_values['vertical'] == True:
-    print("ABC Vertical aisle assignment process has now started.")
-    vertiLocation = orderByVertical(locationDistance, aisleTuple)
-    abcVertiSKU= SKUAssignment(vertiLocation, spaceAllocationMultiply(abcAssignment(specs), spaceAllocationTable))
-    abcVertiOrderLines = orderLineDivision (specs, pickListDict, abcVertiSKU)
-   
-    abcVDistancePeriod = []
-    abcVDistanceNodes = []
-    
-    for dailyOrder in abcVertiOrderLines:
-        abcVDistance = []
-        for orderLine in dailyOrder:
-            abcVDistanceNode = distanceAlgo(orderLine, aisleTuple)
-            abcVDistanceNodes.append(abcVDistanceNode)
-            abcVDistance.append(distanceCalculation(abcVDistanceNode))
-        abcVDistancePeriod.append(abcVDistance)
-        
-    abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
-    exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines, abcVDistancePeriod, exportLocation, "vertical")
-
-print("All heuristic methods have been completed and results have been exported.")
-"""
-This code block will run the final evaluation model to compare the different models
-"""
-
-
