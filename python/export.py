@@ -150,13 +150,60 @@ def exportDistancesOnly (randomD, coiD, weightD, abcHD, abcVD, exportPath):
         writer.save()
 
 """
+This will sum all values in a row
+"""
+def sumAllDistances (df, name:str):
+    
+    df = df.fillna(0)
+    df[name] = df.sum(axis=1)
+    df2 = df[name]
+    return df2
+
+"""
 This will evaluate the different models based off what is decided (distributions, % comparison, etc...)
 """
-def evaluationFile():
-    pass
+def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath):
+    path = exportPath + "/evaluation.xlsx"
+    
+    random_df = pd.DataFrame(randomD)
+    coi_df = pd.DataFrame(coiD)
+    weight_df = pd.DataFrame(weightD)
+    abch_df = pd.DataFrame(abcHD)
+    abcv_df = pd.DataFrame(abcVD)
+    
+    alldf = [random_df, coi_df, weight_df, abch_df, abcv_df]
+    names = ["random", "coi", "weight", "abc horiz", "abc verti"]
+    sumDist = [] 
+
+    for i in range(len(alldf)):
+        sumDist.append(sumAllDistances(alldf[i], names[i]))
+        
+    sum_df = pd.DataFrame(sumDist).T
+    sum_df['Lowest Distance'] = sum_df.idxmin(axis=1)
+
+    with pd.ExcelWriter(path, engine='xlsxwriter') as writer:
+        sum_df.to_excel(writer, sheet_name='Results')
+        writer.save()
+    
+    print("Final evaluation results have been compiled. It has been saved to " + path)
+
     
 
 
 
 
-#file = exportFiles(randomSKU, "", "", (1,23,52))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

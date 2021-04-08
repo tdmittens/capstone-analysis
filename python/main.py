@@ -4,7 +4,6 @@ Before creating web app, this will serve as main file for all calculations
 """
 import pandas as pd
 import math
-import PySimpleGUI as sg
 
 from layout import layoutDistance, orderByVertical, orderByHorizontal
 from order_lines import orderLineComp
@@ -270,6 +269,8 @@ if gui_values['vertical'] == True:
 
 
 exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod, abcVDistancePeriod, abcHDistancePeriod, exportLocation)
+evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod, abcVDistancePeriod, abcHDistancePeriod, exportLocation)
+
 
 print("All heuristic methods have been completed and results have been exported.")
 """

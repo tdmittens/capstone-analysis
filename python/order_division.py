@@ -57,12 +57,12 @@ def orderLineDivision (specs, storeOrderDict, skuAssignment): #skuAssignment is 
                 count = 1     
                 appendList = []
                 for row in pickList.itertuples():
-                    if ((row[7]+temp)>maxVolume): #row[11] is the 12th element in the tuple - THIS CAN CHANGE! CAREFUL ADDING/REMOVING COLUMNS IN DF
+                    if ((row[6]+temp)>maxVolume): #row[11] is the 12th element in the tuple - THIS CAN CHANGE! CAREFUL ADDING/REMOVING COLUMNS IN DF
                         count+=1
-                        temp = 0 + row[7]
+                        temp = 0 + row[6]
                         appendList.append(count)
                     else: 
-                        temp = temp + row[7]
+                        temp = temp + row[6]
                         appendList.append(count)        
                 pickList['Order Line'] = appendList
                 #convert to tuples for distance algorithm
