@@ -20,9 +20,9 @@ def sortIntoAisles(SKUList):
     # SKU = (2,7) where 2 is aisle, 7 is location
     newSKUList = []
     for SKU in SKUList:
-        if SKU[1] % 2 ==0:
+        if SKU[1] % 2 == 0:
             SKUAisle = SKU[1]/2
-        else: 
+        else:
             SKUAisle = int(SKU[1]/2)+1
         newSKU = (SKU[0], SKUAisle)
         newSKUList.append(newSKU)
@@ -33,10 +33,10 @@ def sortIntoAisles(SKUList):
 
 # this method is just to check if it should enter the current aisle on its tour or keep moving forward in the bottom aisle
 
-#def flipStartPoint(SortedList, LastAisle):
+# def flipStartPoint(SortedList, LastAisle):
 #    for SKU in SortedList:
 #        SKU[0] = (LastAisle+1)-SKU[0]
-    
+
 
 def bottomNode(dataTuple, sorted, lastAisle):
     # if at last aisle
@@ -93,47 +93,46 @@ def topNode(dataTuple, sorted, lastAisle):
 
     return (dataTuple[0], dataTuple[1]+1)
 
+
 def distanceAlgo(SKUList, aisles):
     SKUComplete = False
     sortedList = sortIntoAisles(SKUList)  # sort SKUS in order
     lastAisle = (sortedList[len(sortedList)-1])[1]
-    
-    #this condition will ensure that the picker can leave the warehouse when complete
+
+    # this condition will ensure that the picker can leave the warehouse when complete
     if lastAisle % 2 == 1:
-        lastAisle+=1
+        lastAisle += 1
 #    sortedList = flipStartPoint(sortedList, lastAisle) #bandaid to flip sku pick locations
 
     # current node will be a tuple
-    # tuple starts at 
+    # tuple starts at
     currentNode = (0, (sortedList[0])[1]-1)
 #    if currentNode[1] <= 0:
 #        currentNode = (0,lastAisle)
     allNodes = [currentNode]
 
-    
     while (SKUComplete is False):
         #    if currentNode[0]>lastAisle: #need to fix, should be done through method
         #        break
         if currentNode[0] == 0:
             currentNode = bottomNode(currentNode, sortedList, lastAisle)
         elif currentNode[0] == 1:
-            currentNode = middleNode(currentNode, sortedList, aisles, lastAisle)
+            currentNode = middleNode(
+                currentNode, sortedList, aisles, lastAisle)
         elif currentNode[0] == 2:
             currentNode = topNode(currentNode, sortedList, lastAisle)
         if currentNode == (0, lastAisle):
             SKUComplete = True
         allNodes.append(currentNode)
         # print(currentNode)
-    
+
     return allNodes
-    
+
 #    print(allNodes)
 #    # just temp print out of pathing
 #    for node in allNodes:
 #        emptyPath[2-node[1]][node[0]-1] = 1
-#    
+#
 #    # https://stackoverflow.com/questions/17870612/printing-a-two-dimensional-array-in-python
 #    print('\n'.join([''.join(['{:2}'.format(item) for item in row])
 #                     for row in emptyPath]))
-
-    
