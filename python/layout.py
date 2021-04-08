@@ -45,7 +45,7 @@ def layoutDistance(layout_df):
     return locations_df
 
 
-def orderByVertical(locationDistance, aisles):
+def orderByHorizontal(locationDistance, aisles): #across aisle
     locationDistance = locationDistance.sort_values(
         by=['Column', 'Row'], ascending=False)
     returnFrame = pd.DataFrame()
@@ -67,7 +67,7 @@ def orderByVertical(locationDistance, aisles):
     return returnFrame
 
 
-def orderByHorizontal(locationDistance, aisles):
+def orderByVertical(locationDistance, aisles): #within aisle
     # sort by aisle, then by row, starting from bottom and working to the top
     returnFrame = locationDistance.sort_values(
         by=['Column', 'Row'], ascending=False)

@@ -198,7 +198,7 @@ def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath):
     abcv_df = pd.DataFrame(abcVD)
 
     alldf = [random_df, coi_df, weight_df, abch_df, abcv_df]
-    names = ["random", "coi", "weight", "abc horiz", "abc verti"]
+    names = ["random", "coi", "weight", "across aisle", "within aisle"]
     sumDist = []
 
     for i in range(len(alldf)):
