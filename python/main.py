@@ -94,8 +94,8 @@ else:
 try:
     weekRange = ((int)(gui_values['startWeek']), (int)(gui_values['endWeek']))
 except:
-    print("Provided week range has not been provided or is not a number. Default range of week 8-16 will be used.")
-    weekRange = (8, 16)
+    print("Provided week range has not been provided or is not a number. Default range of week 27-35 will be used.")
+    weekRange = (27, 35)
 
 """
 Store orders must be compiled to be for a specific date, divided into multiple data frames for each store
