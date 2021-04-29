@@ -185,37 +185,23 @@ if gui_values['random'] == True:
         randomAssignment(specs), spaceAllocationTable)
     randomSKU = SKUAssignment(
         locationDistance, randomAllocation)  # sku assignment
-    randomOrderLines = orderLineDivision(specs, pickListDict, randomSKU)
-
-    randomDistancePeriod = []  # distance for each towmotor
-
-    for dailyOrder in randomOrderLines:
-        randomDistance = []
-        for orderLine in dailyOrder:  # calculate distance for each towmotor
-            randomDistanceNodes = distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple))
-            randomDistance.append(randomDistanceNodes)
-        randomDistancePeriod.append(randomDistance)
-
+    randomOrderLines = orderLineDivision(specs, orders, randomSKU)
+    
+    randomDistancePeriod = distanceCalculation(
+        distanceAlgo(randomOrderLines, aisleTuple))
+    
     randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines,
                 randomDistancePeriod, exportLocation, "random")
 
 # super cool KYLE SKU assignment - popularity
 if gui_values['coi'] == True:
-    print("Super cool Kyle SKU assignment process has now started.")
+    print("Super cool Kyle SKU popularity process has now started.")
     coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
-    coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
+    coiOrderLines = orderLineDivision(specs, orders, coiSKU)
 
-    coiDistancePeriod = []
-
-    for dailyOrder in coiOrderLines:
-        coiDistance = []
-        for orderLine in dailyOrder:
-            coiDistanceNodes = distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple))
-            coiDistance.append(coiDistanceNodes)
-        coiDistancePeriod.append(coiDistance)
+    coiDistancePeriod = distanceCalculation(
+        distanceAlgo(coiOrderLines, aisleTuple))
 
     coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines,
@@ -223,19 +209,12 @@ if gui_values['coi'] == True:
 
 # super cool KYLE SKU assignment - interaction freq.
 if gui_values['weight'] == True:
-    print("Weight process has now started.")
+    print("Super cool Kyle SKU interaction process has now started.")
     weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
-    weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
+    weightOrderLines = orderLineDivision(specs, orders, weightSKU)
 
-    weightDistancePeriod = []
-
-    for dailyOrder in weightOrderLines:
-        weightDistance = []
-        for orderLine in dailyOrder:
-            weightDistanceNodes = distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple))
-            weightDistance.append(weightDistanceNodes)
-        weightDistancePeriod.append(weightDistance)
+    weightDistancePeriod = distanceCalculation(
+        distanceAlgo(weightOrderLines, aisleTuple))
 
     weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines,

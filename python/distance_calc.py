@@ -14,9 +14,9 @@ def distanceCalculation(distanceNodes):
     distance = 0
 
     # params
-    BETWEEN = 5.89  # travel along aisles
-    LOWERVERT = 68.87  # below crossaisle
-    UPPERVERT = 52.25  # above crossaisle
+    BETWEEN = 144  # travel along aisles
+    LOWERVERT = 0  # below crossaisle
+    UPPERVERT = 40  # above crossaisle
 
     prevNode = distanceNodes[0]
     for node in distanceNodes:

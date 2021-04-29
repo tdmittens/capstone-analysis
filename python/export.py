@@ -52,8 +52,8 @@ def visualSKUOutput(SKUAssignment, aisleTuple):
                         else:
                             array[rowNo][counter] = df.loc[df['A/B']
                                                            == 'A'].iloc[0]['SKU']
-                            array[rowNo][counter+1] = df.loc[df['A/B']
-                                                             == 'B'].iloc[0]['SKU']
+                            # array[rowNo][counter+1] = df.loc[df['A/B']
+                            #                                  == 'B'].iloc[0]['SKU']
                             # https://stackoverflow.com/questions/134934/display-number-with-leading-zeros
                             # +1 to start from 1 instead of 0
                             array[rowNo][counter+2] = "{:02d}".format(
@@ -76,8 +76,8 @@ def visualSKUOutput(SKUAssignment, aisleTuple):
                         else:
                             array[rowNo][counter+2] = df.loc[df['A/B']
                                                              == 'A'].iloc[0]['SKU']
-                            array[rowNo][counter+1] = df.loc[df['A/B']
-                                                             == 'B'].iloc[0]['SKU']
+                            # array[rowNo][counter+1] = df.loc[df['A/B']
+                            #                                  == 'B'].iloc[0]['SKU']
                             # https://stackoverflow.com/questions/134934/display-number-with-leading-zeros
                             array[rowNo][counter] = "{:02d}".format(
                                 actualCol+1) + "{:02d}".format(rowNo+1)  # +1 to start from 1 instead of 0
