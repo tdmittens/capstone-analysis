@@ -125,7 +125,7 @@ if gui_values['spaceAllocate'] == True:
         maxSpaces = (int)(gui_values['maxSpaces'])
     else:
         print("Value not entered. Max spaces set to 8.")
-        maxSpaces = 8
+        maxSpaces = 1
 
     spaceAllocationTable = excelApp(specs,
                                     r"default\space_allocation.xlsm",
@@ -138,7 +138,7 @@ else:
         r"default\space_allocation.xlsm")
     print("Space allocation model did not run. Previous model will be used instead.")
     print("Total spaces set to 2688.")
-    totalSpaces = 2688
+    totalSpaces = 10
 
 # add space allocation to specs dataframe
 specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
@@ -147,16 +147,16 @@ specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
 This will set the aisle tuple based off inputs given by user
 """
 
+aisleTuple = (1, 3, 3)
 if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
     print("One of the cross aisles are missing. The default values of 1, 24, 52 will be used.")
-    aisleTuple = (1, 24, 52)
+    
 else:
     try:
         aisleTuple = ((int)(gui_values['aisleTop']), (int)(
             gui_values['aisleMiddle']), (int)(gui_values['aisleBottom']))
     except:
         print("Inputs for cross aisles are invalid. The The default value of 1, 24, 52 will be used.")
-        aisleTuple = (1, 24, 52)
 
 # additional variables
 availSpaces = len(locationDistance.index)
@@ -171,6 +171,12 @@ For each heuristic, it will also compile a visual layout of where SKUs are in th
 Once all assignments and distance evaluations are completed, these SKUS will be exported into a file
 This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
 """
+
+"""
+UPDATE: Import orders 
+
+"""
+orders = pd.read_excel(r"kyleFiles\orders.xlsx")
 
 # random
 if gui_values['random'] == True:
@@ -195,12 +201,10 @@ if gui_values['random'] == True:
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines,
                 randomDistancePeriod, exportLocation, "random")
 
-# coi
+# super cool KYLE SKU assignment - popularity
 if gui_values['coi'] == True:
-    print("COI process has now started.")
-    coiAllocation = spaceAllocationMultiply(
-        coiAssignment(specs, pickFrequency), spaceAllocationTable)
-    coiSKU = SKUAssignment(locationDistance, coiAllocation)
+    print("Super cool Kyle SKU assignment process has now started.")
+    coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
     coiOrderLines = orderLineDivision(specs, pickListDict, coiSKU)
 
     coiDistancePeriod = []
@@ -217,12 +221,10 @@ if gui_values['coi'] == True:
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines,
                 coiDistancePeriod, exportLocation, "coi")
 
-# weight
+# super cool KYLE SKU assignment - interaction freq.
 if gui_values['weight'] == True:
     print("Weight process has now started.")
-    weightAllocation = spaceAllocationMultiply(
-        weightAssignment(specs), spaceAllocationTable)
-    weightSKU = SKUAssignment(locationDistance, weightAllocation)
+    weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
     weightOrderLines = orderLineDivision(specs, pickListDict, weightSKU)
 
     weightDistancePeriod = []

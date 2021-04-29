@@ -25,8 +25,9 @@ def layoutDistance(layout_df):
         for j in range(0, len(layout_df.columns)):
             locations_df = locations_df.append(
                 {'Row': i+1, 'Column': j+1, 'A/B': 'A', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
-            locations_df = locations_df.append(
-                {'Row': i+1, 'Column': j+1, 'A/B': 'B', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
+            #commented out to only have one pick area per location
+            # locations_df = locations_df.append(
+            #     {'Row': i+1, 'Column': j+1, 'A/B': 'B', 'Distance': layout_df.iloc[i, j]}, ignore_index=True)
 
     locations_df = locations_df.dropna()
     locations_df = locations_df.sort_values(by=['Distance'], ascending=True)
