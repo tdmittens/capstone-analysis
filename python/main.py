@@ -147,7 +147,7 @@ specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
 This will set the aisle tuple based off inputs given by user
 """
 
-aisleTuple = (1, 3, 3)
+aisleTuple = (1, 1, 3)
 if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
     print("One of the cross aisles are missing. The default values of 1, 24, 52 will be used.")
     
@@ -181,14 +181,14 @@ orders = pd.read_excel(r"kyleFiles\orders.xlsx")
 # random
 if gui_values['random'] == True:
     print("Random process has now started.")
-    randomAllocation = spaceAllocationMultiply(
-        randomAssignment(specs), spaceAllocationTable)
-    randomSKU = SKUAssignment(
-        locationDistance, randomAllocation)  # sku assignment
+    randomSKU = pd.read_excel(r"kyleFiles\randomSkuAssignment.xlsx")
     randomOrderLines = orderLineDivision(specs, orders, randomSKU)
     
-    randomDistancePeriod = distanceCalculation(
-        distanceAlgo(randomOrderLines, aisleTuple))
+    randomDistancePeriod = []
+    for orderLine in randomOrderLines:
+        if len(orderLine)>0:
+            randomDistancePeriod.append(distanceCalculation(
+                distanceAlgo(orderLine, aisleTuple)))
     
     randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines,
@@ -200,25 +200,69 @@ if gui_values['coi'] == True:
     coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
     coiOrderLines = orderLineDivision(specs, orders, coiSKU)
 
-    coiDistancePeriod = distanceCalculation(
-        distanceAlgo(coiOrderLines, aisleTuple))
+    coiDistancePeriod = []
+    coiAllDistanceNodes = []
+    for orderLine in coiOrderLines:
+        if len(orderLine)>0:
+            coiDistancePeriod.append(distanceCalculation(
+                distanceAlgo(orderLine, aisleTuple)))
+            coiAllDistanceNodes.append(distanceAlgo(orderLine, aisleTuple))
 
     coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines,
-                coiDistancePeriod, exportLocation, "coi")
+                coiDistancePeriod, exportLocation, "popularity")
 
 # super cool KYLE SKU assignment - interaction freq.
 if gui_values['weight'] == True:
     print("Super cool Kyle SKU interaction process has now started.")
     weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
     weightOrderLines = orderLineDivision(specs, orders, weightSKU)
-
-    weightDistancePeriod = distanceCalculation(
-        distanceAlgo(weightOrderLines, aisleTuple))
+    
+    
+    weightDistancePeriod = []
+    for orderLine in weightOrderLines:
+        if len(orderLine)>0:
+            weightDistancePeriod.append(distanceCalculation(
+                distanceAlgo(orderLine, aisleTuple)))
+        
 
     weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines,
-                weightDistancePeriod, exportLocation, "weight")
+                weightDistancePeriod, exportLocation, "interaction")
+
+#additional layout 1
+    print("Super cool Kyle SKU layout 1 process has now started.")
+    lay1SKU = pd.read_excel(r"kyleFiles\lay1SkuAssignment.xlsx")
+    lay1OrderLines = orderLineDivision(specs, orders, lay1SKU)
+    
+    
+    lay1DistancePeriod = []
+    for orderLine in lay1OrderLines:
+        if len(orderLine)>0:
+            lay1DistancePeriod.append(distanceCalculation(
+                distanceAlgo(orderLine, aisleTuple)))
+        
+
+    lay1VisualSKU = visualSKUOutput(lay1SKU, aisleTuple)
+    exportFiles(lay1SKU, lay1VisualSKU, lay1OrderLines,
+                lay1DistancePeriod, exportLocation, "layout1")
+
+#additional layout 2
+    print("Super cool Kyle SKU layout 2 process has now started.")
+    lay2SKU = pd.read_excel(r"kyleFiles\lay2SkuAssignment.xlsx")
+    lay2OrderLines = orderLineDivision(specs, orders, lay2SKU)
+    
+    
+    lay2DistancePeriod = []
+    for orderLine in lay2OrderLines:
+        if len(orderLine)>0:
+            lay2DistancePeriod.append(distanceCalculation(
+                distanceAlgo(orderLine, aisleTuple)))
+        
+
+    lay2VisualSKU = visualSKUOutput(lay2SKU, aisleTuple)
+    exportFiles(lay2SKU, lay2VisualSKU, lay2OrderLines,
+                lay2DistancePeriod, exportLocation, "layout2")
 
 # abc horizontal
 if gui_values['across'] == True:
@@ -267,10 +311,9 @@ if gui_values['vertical'] == True:
                 abcVDistancePeriod, exportLocation, "vertical")
 
 
-exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,
-                    abcVDistancePeriod, abcHDistancePeriod, exportLocation)
-evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,
-               abcVDistancePeriod, abcHDistancePeriod, exportLocation)
+# exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,
+#                     exportLocation)
+evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,lay1DistancePeriod, lay2DistancePeriod, exportLocation)
 
 
 print("All heuristic methods have been completed and results have been exported.")

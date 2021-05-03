@@ -42,10 +42,13 @@ def orderLineDivision(specs, orders, skuAssignment):  # skuAssignment is datafra
         pickList = pickList.sort_values(
             by=['Column', 'Row'], ascending=True)
         pickList.reset_index(inplace=True, drop=True)
-
+        
+    
         for i in range(0, np.int_(pickList['Order'].max())):
             empty_array = []
-            for index in pickList.index:
+            # starts at 0, but order line starts at 1
+            df = pickList[pickList['Order'] == (i+1)]
+            for index in df.index:
                 empty_array.append(
                     (pickList['Row'][index], pickList['Column'][index]))
             completedOrderLines.append(empty_array)

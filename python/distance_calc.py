@@ -26,15 +26,15 @@ def distanceCalculation(distanceNodes):
         elif node[1] == prevNode[1]:
             distance += BETWEEN
         # if moving from middle to north
-        elif prevNode[0] == 1 and node[0] == 2:
-            distance += UPPERVERT
-        # if moving from middle to south
-        elif prevNode[0] == 1 and node[0] == 0:
-            distance += LOWERVERT
+        # elif prevNode[0] == 1 and node[0] == 2:
+        #     distance += UPPERVERT
+        # # if moving from middle to south
+        # elif prevNode[0] == 1 and node[0] == 0:
+        #     distance += LOWERVERT
         # if moving from south to middle - note that cross aisles already checked before above
         elif prevNode[0] == 0:
-            distance += LOWERVERT
-        elif prevNode[0] == 2:
+            distance += UPPERVERT
+        elif prevNode[0] == 1:
             distance += UPPERVERT
         prevNode = node
 

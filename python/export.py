@@ -149,22 +149,22 @@ This will export all the distances for each model
 """
 
 
-def exportDistancesOnly(randomD, coiD, weightD, abcHD, abcVD, exportPath):
+def exportDistancesOnly(randomD, coiD, weightD, exportPath):
 
     path = exportPath + "/alldistance.xlsx"
 
     random_df = pd.DataFrame(randomD).T
     coi_df = pd.DataFrame(coiD).T
     weight_df = pd.DataFrame(weightD).T
-    abch_df = pd.DataFrame(abcHD).T
-    abcv_df = pd.DataFrame(abcVD).T
+    #abch_df = pd.DataFrame(abcHD).T
+    #abcv_df = pd.DataFrame(abcVD).T
 
     with pd.ExcelWriter(path, engine='xlsxwriter') as writer:
         random_df.to_excel(writer, sheet_name='Random')
         coi_df.to_excel(writer, sheet_name='COI')
         weight_df.to_excel(writer, sheet_name='Weight')
-        abch_df.to_excel(writer, sheet_name='ABC H')
-        abcv_df.to_excel(writer, sheet_name='ABC V')
+        #abch_df.to_excel(writer, sheet_name='ABC H')
+        #abcv_df.to_excel(writer, sheet_name='ABC V')
         print("The file for distance has been compiled. It has been saved to " + path)
         # Close the Pandas Excel writer and output the Excel file.
         writer.save()
@@ -198,7 +198,7 @@ def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath):
     abcv_df = pd.DataFrame(abcVD)
 
     alldf = [random_df, coi_df, weight_df, abch_df, abcv_df]
-    names = ["random", "coi", "weight", "across aisle", "within aisle"]
+    names = ["random", "popularity", "interaction", "layout1", "layout2"]
     sumDist = []
 
     for i in range(len(alldf)):

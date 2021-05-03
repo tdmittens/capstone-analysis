@@ -55,26 +55,26 @@ def bottomNode(dataTuple, sorted, lastAisle):
     return (dataTuple[0], dataTuple[1]+1)
 
 
-def middleNode(dataTuple, sorted, aisles, lastAisle):
-    # if at last aisle
-    if dataTuple[1] == lastAisle:
-        return (dataTuple[0]-1, dataTuple[1])
+# def middleNode(dataTuple, sorted, aisles, lastAisle):
+#     # if at last aisle
+#     if dataTuple[1] == lastAisle:
+#         return (dataTuple[0]-1, dataTuple[1])
 
-    if dataTuple[1] % 2 == 1:  # moving in upwards direction
-        for SKU in sorted:
-            if (SKU[1] == dataTuple[1] and SKU[0] >= aisles[1]):
-                return (dataTuple[0]+1, dataTuple[1])
-            elif (SKU[1] == dataTuple[1]+1 and SKU[0] >= aisles[1]):
-                return (dataTuple[0]+1, dataTuple[1])
-        return (dataTuple[0], dataTuple[1]+1)
-    else:  # moving in downwards direction
-        for SKU in sorted:
-            # will look at skus below cross aisle
-            if (SKU[0] == dataTuple[1] and SKU[0] < aisles[1]):
-                return (dataTuple[0]-1, dataTuple[1])
-            elif (SKU[0] == dataTuple[1]+1 and SKU[0] < aisles[1]):
-                return (dataTuple[0]-1, dataTuple[1])
-        return (dataTuple[0], dataTuple[1]+1)
+#     if dataTuple[1] % 2 == 1:  # moving in upwards direction
+#         for SKU in sorted:
+#             if (SKU[1] == dataTuple[1] and SKU[0] >= aisles[1]):
+#                 return (dataTuple[0]+1, dataTuple[1])
+#             elif (SKU[1] == dataTuple[1]+1 and SKU[0] >= aisles[1]):
+#                 return (dataTuple[0]+1, dataTuple[1])
+#         return (dataTuple[0], dataTuple[1]+1)
+#     else:  # moving in downwards direction
+#         for SKU in sorted:
+#             # will look at skus below cross aisle
+#             if (SKU[0] == dataTuple[1] and SKU[0] < aisles[1]):
+#                 return (dataTuple[0]-1, dataTuple[1])
+#             elif (SKU[0] == dataTuple[1]+1 and SKU[0] < aisles[1]):
+#                 return (dataTuple[0]-1, dataTuple[1])
+#         return (dataTuple[0], dataTuple[1]+1)
 
 
 def topNode(dataTuple, sorted, lastAisle):
@@ -100,8 +100,10 @@ def distanceAlgo(SKUList, aisles):
     lastAisle = (sortedList[len(sortedList)-1])[1]
 
     # this condition will ensure that the picker can leave the warehouse when complete
+    
     if lastAisle % 2 == 1:
         lastAisle += 1
+    
 #    sortedList = flipStartPoint(sortedList, lastAisle) #bandaid to flip sku pick locations
 
     # current node will be a tuple
@@ -116,10 +118,10 @@ def distanceAlgo(SKUList, aisles):
         #        break
         if currentNode[0] == 0:
             currentNode = bottomNode(currentNode, sortedList, lastAisle)
+        # elif currentNode[0] == 1:
+        #     currentNode = middleNode(
+        #         currentNode, sortedList, aisles, lastAisle)
         elif currentNode[0] == 1:
-            currentNode = middleNode(
-                currentNode, sortedList, aisles, lastAisle)
-        elif currentNode[0] == 2:
             currentNode = topNode(currentNode, sortedList, lastAisle)
         if currentNode == (0, lastAisle):
             SKUComplete = True
