@@ -94,7 +94,7 @@ def topNode(dataTuple, sorted, lastAisle):
     return (dataTuple[0], dataTuple[1]+1)
 
 
-def distanceAlgo(SKUList, aisles):
+def distanceAlgo(SKUList):
     SKUComplete = False
     sortedList = sortIntoAisles(SKUList)  # sort SKUS in order
     lastAisle = (sortedList[len(sortedList)-1])[1]

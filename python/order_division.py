@@ -13,7 +13,7 @@ import time
 # preferred format ({Row}, {Column}, {a/b}, {SKU})
 
 
-def orderLineDivision(specs, orders, skuAssignment):  # skuAssignment is dataframe
+def orderLineDivision(pickList, orders, skuAssignment):  # skuAssignment is dataframe
     # array has now been moved at the top so all order lines for all stores can be compiled here
     """
     Update: for loop was added, as this was only one dataframe before (now multiple)
@@ -22,8 +22,6 @@ def orderLineDivision(specs, orders, skuAssignment):  # skuAssignment is datafra
     """
 
     completedOrderLines = []
-
-    weight = specs[['SAP #', 'Case Volume (cuft)']]
 
     # inplace of old dataframe
     skuAssignment.sort_values(['Row', 'Column'], inplace=True)
@@ -34,7 +32,7 @@ def orderLineDivision(specs, orders, skuAssignment):  # skuAssignment is datafra
     
     """
 
-    pickList = orders.merge(weight, left_on='SKU', right_on='SAP #')
+    pickList = orders.merge(pickList, left_on='SKU', right_on='SKU')
     if (pickList.empty == False):
         pickList = pickList.drop(columns=['SAP #'])
         # issue with merge on unique values, creates duplicates

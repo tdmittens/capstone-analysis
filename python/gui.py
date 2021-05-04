@@ -29,24 +29,14 @@ def gui_method():
             sg.FileBrowse(),
         ],
         [
-            sg.Text("Select Specifications File", size=(30, 1)),
+            sg.Text("Select Picklist File", size=(30, 1)),
             sg.In(size=(25, 1), enable_events=True, key="specs"),
             sg.FileBrowse(),
         ],
         [
-            sg.Text("Select Sales Data File", size=(30, 1)),
-            sg.In(size=(25, 1), enable_events=True, key="salesData"),
+            sg.Text("Select Orders File", size=(30, 1)),
+            sg.In(size=(25, 1), enable_events=True, key="orders"),
             sg.FileBrowse(),
-        ],
-        [
-            sg.Text("Select Store Orders", size=(30, 1)),
-            sg.In(size=(25, 1), enable_events=True, key="storeOrder"),
-            sg.FileBrowse(),
-        ],
-        [
-            sg.Text("Select Order Lines Location", size=(30, 1)),
-            sg.In(size=(25, 1), enable_events=True, key="orderLinesLocation"),
-            sg.FolderBrowse(),
         ],
         [
             sg.Text("Export File Location", size=(30, 1)),
@@ -54,38 +44,39 @@ def gui_method():
             sg.FolderBrowse(),
         ],
         [
-            sg.Text("What range of weeks would you like to look at?",
-                    font=bold_method)
+            sg.Text("Location of first SKU Layout", size=(30, 1)),
+            sg.In(size=(15, 1), enable_events=True, key="sku1"),
+            sg.FolderBrowse(),
+            sg.Text("Name of Assignment", size=(20, 1)),
+            sg.InputText(size=(15, 1), key="sku1Text")
         ],
         [
-            sg.Text("Starting Week", size=(30, 1)),
-            sg.InputText(size=(5, 1), key="startWeek")
+            sg.Text("Location of second SKU Layout", size=(30, 1)),
+            sg.In(size=(15, 1), enable_events=True, key="sku2"),
+            sg.FolderBrowse(),
+            sg.Text("Name of Assignment", size=(20, 1)),
+            sg.InputText(size=(15, 1), key="sku2Text")
         ],
         [
-            sg.Text("Ending Week", size=(30, 1)),
-            sg.InputText(size=(5, 1), key="endWeek")
+            sg.Text("Location of third SKU Layout", size=(30, 1)),
+            sg.In(size=(15, 1), enable_events=True, key="sku3"),
+            sg.FolderBrowse(),
+            sg.Text("Name of Assignment", size=(20, 1)),
+            sg.InputText(size=(15, 1), key="sku3Text")
+        ],        
+        [
+            sg.Text("Location of fourth SKU Layout", size=(30, 1)),
+            sg.In(size=(15, 1), enable_events=True, key="sku4"),
+            sg.FolderBrowse(),
+            sg.Text("Name of Assignment", size=(20, 1)),
+            sg.InputText(size=(15, 1), key="sku4Text")
         ],
         [
-            sg.Text("Select store order date to analyze:", font=bold_method)
-        ],
-        [
-            sg.Text("Month", size=(10, 1)),
-            sg.InputText(size=(5, 1), key="salesMonth"),
-            sg.Text("Day", size=(10, 1)),
-            sg.InputText(size=(5, 1), key="salesDay"),
-            sg.Text("Year", size=(10, 1)),
-            sg.InputText(size=(5, 1), key="salesYear")
-        ],
-        [
-            sg.Checkbox("Would you like to compute Space Allocation Model? If not, previous results will be used.",
-                        default=False, key="spaceAllocate"),
-        ],
-        [
-            sg.Text("Space Allocation Parameters:", font=bold_method)
-        ],
-        [
-            sg.Text("Max Spaces per SKU", size=(30, 1)),
-            sg.InputText(size=(5, 1), key="maxSpaces")
+            sg.Text("Location of fifth SKU Layout", size=(30, 1)),
+            sg.In(size=(15, 1), enable_events=True, key="sku5"),
+            sg.FolderBrowse(),
+            sg.Text("Name of Assignment", size=(20, 1)),
+            sg.InputText(size=(15, 1), key="sku5Text")
         ],
         [
             sg.Text(
@@ -103,11 +94,11 @@ def gui_method():
             sg.Text("Determine SKU List to Calculate", font=bold_method)
         ],
         [
-            sg.Checkbox("Random", default=True, key="random"),
-            sg.Checkbox("COI", default=True, key="coi"),
-            sg.Checkbox("Weight", default=True, key="weight"),
-            sg.Checkbox("ABC (across)", default=False, key="across"),
-            sg.Checkbox("ABC (vertical)", default=False, key="vertical")
+            sg.Checkbox("SKU1", default=True, key="random"),
+            sg.Checkbox("SKU2", default=True, key="coi"),
+            sg.Checkbox("SKU3", default=True, key="weight"),
+            sg.Checkbox("SKU4", default=False, key="across"),
+            sg.Checkbox("SKU5", default=False, key="vertical")
         ],
         [
             sg.Submit(), sg.Cancel()

@@ -44,36 +44,21 @@ else:
 # specs
 
 if gui_values['specs'] != "":
-    specs = pd.read_excel(gui_values['specs'])
+    pickList = pd.read_excel(gui_values['specs'])
 else:
-    print("Specifications file not specified. Default file will be used.")
-    specs = pd.read_excel(r"default\SKU Info.xlsx")
-
-# store orders/pick list
-
-if gui_values['storeOrder'] != "":
-    storeOrderData = pd.read_excel(gui_values['storeOrder'])
-else:
-    print("Store order file not specified. Default file will be used.")
-    storeOrderData = pd.read_excel(r"default\sample order line.xlsx")
+    print("Picklist file not specified. Default file will be used.")
+    pickList = pd.read_excel(r"default\SKU Info.xlsx")
 
 """
-This block of code will be used to compile order lines together. 
-If no file location is added, a default file will be used.
-"""
-orderLinesLocation = gui_values['orderLinesLocation']
-if (orderLinesLocation != ""):
-    pickFrequency = orderLineComp(orderLinesLocation)
-else:
-    print("No path has been loaded in to compile order lines. A default generated file will be used in this case.")
-    pickFrequency = pd.read_excel(r'default\order_lines_df.xlsx')
+UPDATE: Import orders 
 
-# Sales data
-if gui_values['salesData'] != "":
-    salesDataDict = pd.read_excel(gui_values['salesData'], None)
+"""
+if gui_values['orders'] != "":
+    orders = pd.read_excel(gui_values['orders'])
 else:
-    print("Sales data not specified. Default file will be used.")
-    salesDataDict = pd.read_excel(r"default\Sales Data.xlsx", None)
+    print("Orders file not specified. Default file will be used.")
+    orders = pd.read_excel(r"kyleFiles\orders.xlsx")
+
 
 # export path
 if gui_values['exportLocation'] != "":
@@ -81,34 +66,7 @@ if gui_values['exportLocation'] != "":
 else:
     print("Export location not specified. ../python/export will be used as path ")
     exportLocation = r"export"
-
-# store order date
-if gui_values['salesYear'] == "" or gui_values['salesMonth'] == "" or gui_values['salesDay'] == "":
-    print("One of the fields are missing. Default day of 05/11/2020 will be used.")
-    orderDate = "5/11/2020"
-else:
-    orderDate = gui_values['salesMonth'] + "/" + \
-        gui_values['salesDay'] + "/" + gui_values['salesYear']
-
-# Tuple for week range
-try:
-    weekRange = ((int)(gui_values['startWeek']), (int)(gui_values['endWeek']))
-except:
-    print("Provided week range has not been provided or is not a number. Default range of week 27-35 will be used.")
-    weekRange = (27, 35)
-
-"""
-Store orders must be compiled to be for a specific date, divided into multiple data frames for each store
-This will return back a dictionary of data frames with every data frame being one store
-"""
-
-pickListDict = storeOrderComp(storeOrderData)
-
-"""
-This will take the specifications file and modify it for use in VBA model and future use cases
-"""
-
-specs = specsDataComp(specs, salesDataDict, weekRange)
+    
 
 """
 Determine the distance for each pick spot
@@ -117,52 +75,51 @@ locationDistance = layoutDistance(layout)
 
 
 """
-This will import the data to an Excel File to use OpenSolver
-Lastly, it will return a dataframe with SpaceAllocation
-"""
-if gui_values['spaceAllocate'] == True:
-    if gui_values['maxSpaces'] != "":
-        maxSpaces = (int)(gui_values['maxSpaces'])
-    else:
-        print("Value not entered. Max spaces set to 8.")
-        maxSpaces = 1
-
-    spaceAllocationTable = excelApp(specs,
-                                    r"default\space_allocation.xlsm",
-                                    maxSpaces,
-                                    # total spaces in layout distance dataframe
-                                    len(locationDistance.index),
-                                    len(specs.index))  # amount of SKUS in current specs table
-else:
-    spaceAllocationTable = spaceAllocationDataFrame(
-        r"default\space_allocation.xlsm")
-    print("Space allocation model did not run. Previous model will be used instead.")
-    print("Total spaces set to 2688.")
-    totalSpaces = 10
-
-# add space allocation to specs dataframe
-specs = specsAddSpaceAllocation(specs, spaceAllocationTable)
-
-"""
 This will set the aisle tuple based off inputs given by user
 """
-
-aisleTuple = (1, 1, 3)
-if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
-    print("One of the cross aisles are missing. The default values of 1, 24, 52 will be used.")
+# aisleTuple = (1, 1, 3)
+# if gui_values['aisleTop'] == "" or gui_values['aisleMiddle'] == "" or gui_values['aisleBottom'] == "":
+#     print("One of the cross aisles are missing. The default values of 1, 1, 3 will be used.")
     
-else:
-    try:
-        aisleTuple = ((int)(gui_values['aisleTop']), (int)(
-            gui_values['aisleMiddle']), (int)(gui_values['aisleBottom']))
-    except:
-        print("Inputs for cross aisles are invalid. The The default value of 1, 24, 52 will be used.")
+# else:
+#     try:
+#         aisleTuple = ((int)(gui_values['aisleTop']), (int)(
+#             gui_values['aisleMiddle']), (int)(gui_values['aisleBottom']))
+#     except:
+#         print("Inputs for cross aisles are invalid. The The default value of 1, 1, 3 will be used.")
 
 # additional variables
 availSpaces = len(locationDistance.index)
 ABCfreq = (0.5, 0.8, 1)
 ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
 
+"""
+Text entries for each of the SKUs
+"""
+if gui_values['sku1Text'] != "":
+    sku1Text = gui_values['sku1Text']
+else:
+    sku1Text = "SKU 1"
+
+if gui_values['sku2Text'] != "":
+    sku2Text = gui_values['sku2Text']
+else:
+    sku2Text = "SKU 2"
+    
+if gui_values['sku3Text'] != "":
+    sku3Text = gui_values['sku3Text']
+else:
+    sku3Text = "SKU 3"
+    
+if gui_values['sku4Text'] != "":
+    sku4Text = gui_values['sku4Text']
+else:
+    sku4Text = "SKU 4"
+    
+if gui_values['sku5Text'] != "":
+    sku5Text = gui_values['sku5Text']
+else:
+    sku5Text = "SKU 5"
 
 """
 This block of code will implement SKU allocation models, dependant if the user selected them in the GUI.
@@ -172,143 +129,95 @@ Once all assignments and distance evaluations are completed, these SKUS will be 
 This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
 """
 
-"""
-UPDATE: Import orders 
 
-"""
-orders = pd.read_excel(r"kyleFiles\orders.xlsx")
 
-# random
-if gui_values['random'] == True:
-    print("Random process has now started.")
+#sku1
+if gui_values['sku1'] == True:
+    print("Process for SKU Assignment 1 has started.")
     randomSKU = pd.read_excel(r"kyleFiles\randomSkuAssignment.xlsx")
-    randomOrderLines = orderLineDivision(specs, orders, randomSKU)
+    randomOrderLines = orderLineDivision(pickList, orders, randomSKU)
     
     randomDistancePeriod = []
     for orderLine in randomOrderLines:
         if len(orderLine)>0:
             randomDistancePeriod.append(distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple)))
+                distanceAlgo(orderLine)))
     
-    randomVisualSKU = visualSKUOutput(randomSKU, aisleTuple)
+    randomVisualSKU = []
     exportFiles(randomSKU, randomVisualSKU, randomOrderLines,
-                randomDistancePeriod, exportLocation, "random")
+                randomDistancePeriod, exportLocation, sku1Text)
 
-# super cool KYLE SKU assignment - popularity
-if gui_values['coi'] == True:
-    print("Super cool Kyle SKU popularity process has now started.")
+#sku2
+if gui_values['sku2'] == True:
+    print("Process for SKU Assignment 2 has started.")
     coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
-    coiOrderLines = orderLineDivision(specs, orders, coiSKU)
+    coiOrderLines = orderLineDivision(pickList, orders, coiSKU)
 
     coiDistancePeriod = []
     coiAllDistanceNodes = []
     for orderLine in coiOrderLines:
         if len(orderLine)>0:
             coiDistancePeriod.append(distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple)))
-            coiAllDistanceNodes.append(distanceAlgo(orderLine, aisleTuple))
+                distanceAlgo(orderLine)))
+            coiAllDistanceNodes.append(distanceAlgo(orderLine))
 
-    coiVisualSKU = visualSKUOutput(coiSKU, aisleTuple)
+    coiVisualSKU = []
     exportFiles(coiSKU, coiVisualSKU, coiOrderLines,
-                coiDistancePeriod, exportLocation, "popularity")
+                coiDistancePeriod, exportLocation, sku2Text)
 
-# super cool KYLE SKU assignment - interaction freq.
-if gui_values['weight'] == True:
-    print("Super cool Kyle SKU interaction process has now started.")
+#sku3
+if gui_values['sku3'] == True:
+    print("Process for SKU Assignment 3 has started.")
     weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
-    weightOrderLines = orderLineDivision(specs, orders, weightSKU)
+    weightOrderLines = orderLineDivision(pickList, orders, weightSKU)
     
     
     weightDistancePeriod = []
     for orderLine in weightOrderLines:
         if len(orderLine)>0:
             weightDistancePeriod.append(distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple)))
+                distanceAlgo(orderLine)))
         
 
-    weightVisualSKU = visualSKUOutput(weightSKU, aisleTuple)
+    weightVisualSKU = []
     exportFiles(weightSKU, weightVisualSKU, weightOrderLines,
-                weightDistancePeriod, exportLocation, "interaction")
+                weightDistancePeriod, exportLocation, sku3Text)
 
-#additional layout 1
-    print("Super cool Kyle SKU layout 1 process has now started.")
+#sku4
+if gui_values['sku4'] == True:
+    print("Process for SKU Assignment 4 has started.")
     lay1SKU = pd.read_excel(r"kyleFiles\lay1SkuAssignment.xlsx")
-    lay1OrderLines = orderLineDivision(specs, orders, lay1SKU)
+    lay1OrderLines = orderLineDivision(pickList, orders, lay1SKU)
     
     
     lay1DistancePeriod = []
     for orderLine in lay1OrderLines:
         if len(orderLine)>0:
             lay1DistancePeriod.append(distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple)))
+                distanceAlgo(orderLine)))
         
 
-    lay1VisualSKU = visualSKUOutput(lay1SKU, aisleTuple)
+    lay1VisualSKU = []
     exportFiles(lay1SKU, lay1VisualSKU, lay1OrderLines,
-                lay1DistancePeriod, exportLocation, "layout1")
+                lay1DistancePeriod, exportLocation, sku4Text)
 
-#additional layout 2
-    print("Super cool Kyle SKU layout 2 process has now started.")
+#sku 5
+if gui_values['sku5'] == True:
+    print("Process for SKU Assignment 5 has started.")
     lay2SKU = pd.read_excel(r"kyleFiles\lay2SkuAssignment.xlsx")
-    lay2OrderLines = orderLineDivision(specs, orders, lay2SKU)
+    lay2OrderLines = orderLineDivision(pickList, orders, lay2SKU)
     
     
     lay2DistancePeriod = []
     for orderLine in lay2OrderLines:
         if len(orderLine)>0:
             lay2DistancePeriod.append(distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple)))
+                distanceAlgo(orderLine)))
         
 
-    lay2VisualSKU = visualSKUOutput(lay2SKU, aisleTuple)
+    lay2VisualSKU = []
     exportFiles(lay2SKU, lay2VisualSKU, lay2OrderLines,
-                lay2DistancePeriod, exportLocation, "layout2")
-
-# abc horizontal
-if gui_values['across'] == True:
-    print("ABC Across aisle assignment process has now started.")
-    horizLocation = orderByHorizontal(locationDistance, aisleTuple)
-    abcHorizSKU = SKUAssignment(horizLocation, spaceAllocationMultiply(
-        abcAssignment(specs), spaceAllocationTable))
-    abcHorizOrderLines = orderLineDivision(specs, pickListDict, abcHorizSKU)
-
-    abcHDistancePeriod = []
-
-    for dailyOrder in abcHorizOrderLines:
-        abcHDistance = []
-        for orderLine in dailyOrder:
-            abcHDistanceNodes = distanceCalculation(
-                distanceAlgo(orderLine, aisleTuple))
-            abcHDistance.append(abcHDistanceNodes)
-        abcHDistancePeriod.append(abcHDistance)
-
-    abcHorizVisualSKU = visualSKUOutput(abcHorizSKU, aisleTuple)
-    exportFiles(abcHorizSKU, abcHorizVisualSKU, abcHorizOrderLines,
-                abcHDistancePeriod, exportLocation, "across")
-
-
-# abc vertical
-if gui_values['vertical'] == True:
-    print("ABC Vertical aisle assignment process has now started.")
-    vertiLocation = orderByVertical(locationDistance, aisleTuple)
-    abcVertiSKU = SKUAssignment(vertiLocation, spaceAllocationMultiply(
-        abcAssignment(specs), spaceAllocationTable))
-    abcVertiOrderLines = orderLineDivision(specs, pickListDict, abcVertiSKU)
-
-    abcVDistancePeriod = []
-    abcVDistanceNodes = []
-
-    for dailyOrder in abcVertiOrderLines:
-        abcVDistance = []
-        for orderLine in dailyOrder:
-            abcVDistanceNode = distanceAlgo(orderLine, aisleTuple)
-            abcVDistanceNodes.append(abcVDistanceNode)
-            abcVDistance.append(distanceCalculation(abcVDistanceNode))
-        abcVDistancePeriod.append(abcVDistance)
-
-    abcVertiVisualSKU = visualSKUOutput(abcVertiSKU, aisleTuple)
-    exportFiles(abcVertiSKU, abcVertiVisualSKU, abcVertiOrderLines,
-                abcVDistancePeriod, exportLocation, "vertical")
+                lay2DistancePeriod, exportLocation, sku5Text)
 
 
 # exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,
