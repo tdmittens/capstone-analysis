@@ -31,11 +31,12 @@ def orderLineDivision(orders, skuAssignment):  # skuAssignment is dataframe
     will assume a weight of 80 cuft for now, to be changed
     
     """
-    
+
 
     if (skuAssignment.empty == False):
         # issue with merge on unique values, creates duplicates
-        pickList = skuAssignment.sort_values(
+        pickList = orders.merge(skuAssignment, how = 'left')
+        pickList = pickList.sort_values(
             by=['Column', 'Row'], ascending=True)
         pickList.reset_index(inplace=True, drop=True)
         

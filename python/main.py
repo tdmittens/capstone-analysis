@@ -39,7 +39,7 @@ if gui_values['layout'] != "":
     layout = pd.read_excel(gui_values['layout'])
 else:
     print("Layout file not specified. Default file will be used.")
-    layout = pd.read_excel(r"default\final_layout.xlsx")
+    layout = pd.read_excel(r"kyleFiles\final_layout.xlsx")
 
 """
 UPDATE: Import orders 
@@ -155,7 +155,11 @@ Once all assignments and distance evaluations are completed, these SKUS will be 
 This will require SKU Assignment, Order Lines, and Total Distance for all Order Lines
 """
 
-
+randomDistancePeriod = []
+coiDistancePeriod = []
+weightDistancePeriod = []
+lay1DistancePeriod = []
+lay2DistancePeriod = []
 
 #sku1
 if gui_values['bool1'] == True:
@@ -246,8 +250,7 @@ if gui_values['bool5'] == True:
                 lay2DistancePeriod, exportLocation, sku5Text)
 
 
-# exportDistancesOnly(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,
-#                     exportLocation)
+names = [sku1Text, sku2Text, sku3Text, sku4Text, sku5Text]
 evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,lay1DistancePeriod, lay2DistancePeriod, exportLocation)
 
 

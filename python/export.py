@@ -188,7 +188,7 @@ This will evaluate the different models based off what is decided (distributions
 """
 
 
-def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath):
+def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath, names):
     path = exportPath + "/evaluation.xlsx"
 
     random_df = pd.DataFrame(randomD)
@@ -198,7 +198,6 @@ def evaluationFile(randomD, coiD, weightD, abcHD, abcVD, exportPath):
     abcv_df = pd.DataFrame(abcVD)
 
     alldf = [random_df, coi_df, weight_df, abch_df, abcv_df]
-    names = ["random", "popularity", "interaction", "layout1", "layout2"]
     sumDist = []
 
     for i in range(len(alldf)):
