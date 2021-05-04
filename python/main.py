@@ -41,14 +41,6 @@ else:
     print("Layout file not specified. Default file will be used.")
     layout = pd.read_excel(r"default\final_layout.xlsx")
 
-# specs
-
-if gui_values['specs'] != "":
-    pickList = pd.read_excel(gui_values['specs'])
-else:
-    print("Picklist file not specified. Default file will be used.")
-    pickList = pd.read_excel(r"default\SKU Info.xlsx")
-
 """
 UPDATE: Import orders 
 
@@ -94,6 +86,40 @@ ABCfreq = (0.5, 0.8, 1)
 ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
 
 """
+SKU Assignment for each of the SKUs
+"""
+if gui_values['sku1'] != "":
+    randomSKU = pd.read_excel(gui_values['sku1'])
+else:
+    print("SKU 1 assignment list not found, will use default.")
+    randomSKU = pd.read_excel(r"kyleFiles\randomSkuAssignment.xlsx")
+
+if gui_values['sku2'] != "":
+    coiSKU = pd.read_excel(gui_values['sku2'])
+else:
+    print("SKU 2 assignment list not found, will use default.")
+    coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
+    
+if gui_values['sku3'] != "":
+    weightSKU = pd.read_excel(gui_values['sku3'])
+else:
+    print("SKU 3 assignment list not found, will use default.")
+    weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
+    
+if gui_values['sku4'] != "":
+    lay1SKU = pd.read_excel(gui_values['sku4'])
+else:
+    print("SKU 4 assignment list not found, will use default.")
+    lay1SKU = pd.read_excel(r"kyleFiles\lay1SkuAssignment.xlsx")
+    
+if gui_values['sku5'] != "":
+    lay2SKU = pd.read_excel(gui_values['sku5'])
+else:
+    print("SKU 5 assignment list not found, will use default.")
+    lay2SKU = pd.read_excel(r"kyleFiles\lay2SkuAssignment.xlsx")
+
+
+"""
 Text entries for each of the SKUs
 """
 if gui_values['sku1Text'] != "":
@@ -132,10 +158,10 @@ This will require SKU Assignment, Order Lines, and Total Distance for all Order 
 
 
 #sku1
-if gui_values['sku1'] == True:
+if gui_values['bool1'] == True:
     print("Process for SKU Assignment 1 has started.")
-    randomSKU = pd.read_excel(r"kyleFiles\randomSkuAssignment.xlsx")
-    randomOrderLines = orderLineDivision(pickList, orders, randomSKU)
+    
+    randomOrderLines = orderLineDivision(orders, randomSKU)
     
     randomDistancePeriod = []
     for orderLine in randomOrderLines:
@@ -148,10 +174,10 @@ if gui_values['sku1'] == True:
                 randomDistancePeriod, exportLocation, sku1Text)
 
 #sku2
-if gui_values['sku2'] == True:
+if gui_values['bool2'] == True:
     print("Process for SKU Assignment 2 has started.")
-    coiSKU = pd.read_excel(r"kyleFiles\popSkuAssignment.xlsx")
-    coiOrderLines = orderLineDivision(pickList, orders, coiSKU)
+    
+    coiOrderLines = orderLineDivision(orders, coiSKU)
 
     coiDistancePeriod = []
     coiAllDistanceNodes = []
@@ -166,10 +192,10 @@ if gui_values['sku2'] == True:
                 coiDistancePeriod, exportLocation, sku2Text)
 
 #sku3
-if gui_values['sku3'] == True:
+if gui_values['bool3'] == True:
     print("Process for SKU Assignment 3 has started.")
-    weightSKU = pd.read_excel(r"kyleFiles\interactionSkuAssignment.xlsx")
-    weightOrderLines = orderLineDivision(pickList, orders, weightSKU)
+    
+    weightOrderLines = orderLineDivision(orders, weightSKU)
     
     
     weightDistancePeriod = []
@@ -184,10 +210,10 @@ if gui_values['sku3'] == True:
                 weightDistancePeriod, exportLocation, sku3Text)
 
 #sku4
-if gui_values['sku4'] == True:
+if gui_values['bool4'] == True:
     print("Process for SKU Assignment 4 has started.")
-    lay1SKU = pd.read_excel(r"kyleFiles\lay1SkuAssignment.xlsx")
-    lay1OrderLines = orderLineDivision(pickList, orders, lay1SKU)
+    
+    lay1OrderLines = orderLineDivision(orders, lay1SKU)
     
     
     lay1DistancePeriod = []
@@ -202,10 +228,10 @@ if gui_values['sku4'] == True:
                 lay1DistancePeriod, exportLocation, sku4Text)
 
 #sku 5
-if gui_values['sku5'] == True:
+if gui_values['bool5'] == True:
     print("Process for SKU Assignment 5 has started.")
-    lay2SKU = pd.read_excel(r"kyleFiles\lay2SkuAssignment.xlsx")
-    lay2OrderLines = orderLineDivision(pickList, orders, lay2SKU)
+    
+    lay2OrderLines = orderLineDivision(orders, lay2SKU)
     
     
     lay2DistancePeriod = []

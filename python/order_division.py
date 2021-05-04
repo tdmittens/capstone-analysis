@@ -13,7 +13,7 @@ import time
 # preferred format ({Row}, {Column}, {a/b}, {SKU})
 
 
-def orderLineDivision(pickList, orders, skuAssignment):  # skuAssignment is dataframe
+def orderLineDivision(orders, skuAssignment):  # skuAssignment is dataframe
     # array has now been moved at the top so all order lines for all stores can be compiled here
     """
     Update: for loop was added, as this was only one dataframe before (now multiple)
@@ -31,13 +31,11 @@ def orderLineDivision(pickList, orders, skuAssignment):  # skuAssignment is data
     will assume a weight of 80 cuft for now, to be changed
     
     """
+    
 
-    pickList = orders.merge(pickList, left_on='SKU', right_on='SKU')
-    if (pickList.empty == False):
-        pickList = pickList.drop(columns=['SAP #'])
+    if (skuAssignment.empty == False):
         # issue with merge on unique values, creates duplicates
-        pickList = pickList.merge(skuAssignment, how='left')
-        pickList = pickList.sort_values(
+        pickList = skuAssignment.sort_values(
             by=['Column', 'Row'], ascending=True)
         pickList.reset_index(inplace=True, drop=True)
         
