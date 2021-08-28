@@ -25,6 +25,7 @@ def orderLineDivision(orders, skuAssignment):  # skuAssignment is dataframe
 
     # inplace of old dataframe
     skuAssignment.sort_values(['Row', 'Column'], inplace=True)
+    print("All values sorted.")
 
     """
     will take in the skus to be picked and their quantity, and create lists of skus to be picked that wil be used for calculating distance
@@ -40,11 +41,12 @@ def orderLineDivision(orders, skuAssignment):  # skuAssignment is dataframe
             by=['Column', 'Row'], ascending=True)
         pickList.reset_index(inplace=True, drop=True)
         
-    
-        for i in range(0, np.int_(pickList['Order'].max())):
+        uniqueValues = pickList['Order'].unique()
+        
+        #changed to go from 0 to x and instead uses unique values - 08/28/2021
+        for i in uniqueValues:
             empty_array = []
-            # starts at 0, but order line starts at 1
-            df = pickList[pickList['Order'] == (i+1)]
+            df = pickList[pickList['Order'] == i]
             for index in df.index:
                 empty_array.append(
                     (pickList['Row'][index], pickList['Column'][index]))

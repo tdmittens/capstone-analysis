@@ -60,10 +60,10 @@ else:
     exportLocation = r"export"
     
 
-"""
-Determine the distance for each pick spot
-"""
-locationDistance = layoutDistance(layout)
+# """
+# Determine the distance for each pick spot
+# """
+# locationDistance = layoutDistance(layout)
 
 
 """
@@ -81,9 +81,9 @@ This will set the aisle tuple based off inputs given by user
 #         print("Inputs for cross aisles are invalid. The The default value of 1, 1, 3 will be used.")
 
 # additional variables
-availSpaces = len(locationDistance.index)
-ABCfreq = (0.5, 0.8, 1)
-ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
+# availSpaces = len(locationDistance.index)
+# ABCfreq = (0.5, 0.8, 1)
+# ABCcutoff = [math.floor(availSpaces * x) for x in ABCfreq]
 
 """
 SKU Assignment for each of the SKUs
@@ -251,7 +251,7 @@ if gui_values['bool5'] == True:
 
 
 names = [sku1Text, sku2Text, sku3Text, sku4Text, sku5Text]
-evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,lay1DistancePeriod, lay2DistancePeriod, exportLocation)
+evaluationFile(randomDistancePeriod, coiDistancePeriod, weightDistancePeriod,lay1DistancePeriod, lay2DistancePeriod, exportLocation, names)
 
 
 print("All heuristic methods have been completed and results have been exported.")
