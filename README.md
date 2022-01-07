@@ -1,4 +1,4 @@
-# capstone-analysis
+# Design of Warehouse Slotting Process
 
 
 Python model used to improve SKU allocation. 
